@@ -1,5 +1,5 @@
 "use client";
-
+import { useToast } from "@/components/ui/use-toast";
 import { FaBlogger } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -16,6 +16,8 @@ import { Button } from "../button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Joi from "joi";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const usernameSchema = Joi.string()
   .min(6)
@@ -37,11 +39,43 @@ export default function RegisterForm() {
     email: "",
     password: "",
   });
+  const { toast } = useToast();
+  const router = useRouter();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pass, showPass] = useState(false);
+
+  const handleRegistration = async () => {
+    if (username == true && email == true && password == true) {
+      const response = await axios
+        .post("/api/register", {
+          username: input.username,
+          email: input.email,
+          password: input.password,
+        })
+        .then(() => {
+          toast({
+            description: "User has been created",
+          });
+
+          router.push("/login");
+        })
+        .catch((err) => {
+          toast({
+            variant: "destructive",
+            description: "Ups... Something went wrong",
+          });
+        });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Ups... You have to enter some data",
+        description: "For registration, you shall add all the data required",
+      });
+    }
+  };
 
   useEffect(() => {
     const validateUsername = usernameSchema.validate(input.username);
@@ -164,7 +198,9 @@ export default function RegisterForm() {
         <CardFooter>
           <div className="flex flex-col w-full space-y-5">
             <div className="w-full flex ">
-              <Button className="w-full">Register now</Button>
+              <Button onClick={handleRegistration} className="w-full">
+                Register now
+              </Button>
             </div>
             <div className="flex justify-center">
               <p className="text-sm text-slate-500 ">
