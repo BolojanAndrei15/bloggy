@@ -50,7 +50,7 @@ export default function RegisterForm() {
   const handleRegistration = async () => {
     if (username == true && email == true && password == true) {
       const response = await axios
-        .post("/api/register", {
+        .post("http://localhost:3000/api/register", {
           username: input.username,
           email: input.email,
           password: input.password,
@@ -65,7 +65,8 @@ export default function RegisterForm() {
         .catch((err) => {
           toast({
             variant: "destructive",
-            description: "Ups... Something went wrong",
+            title: "Ups, something went wrong",
+            description: err.message,
           });
         });
     } else {

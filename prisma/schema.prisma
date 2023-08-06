@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id    String     @id @default(uuid())
-  name  String?
-  email String?    @unique
-  image String?
-  posts BlogPost[]
+  id       String     @id @default(uuid())
+  name     String     @unique
+  email    String     @unique
+  password String
+  image    String?
+  posts    BlogPost[]
 }
 
 model BlogPost {
