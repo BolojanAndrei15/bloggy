@@ -2,8 +2,18 @@
 import { FaBlogger } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import RegisterBtn from "./RegisterBtn";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
+
 function Navbar() {
   const { data: session, status } = useSession();
   return (
@@ -18,13 +28,27 @@ function Navbar() {
       ) : status == "unauthenticated" ? (
         <RegisterBtn />
       ) : (
-        <div className="flex justify-center items-center space-x-2">
-          <Avatar className="w-8 h-8 md:w-10 md:h-10">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <h1 className="font-semibold text-md">{session.user.name}</h1>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex justify-center items-center space-x-2">
+            <Avatar className="w-8 h-8 md:w-10 md:h-10">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <h1 className="font-semibold text-md">{session.user.name}</h1>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={() => signOut()}
+              className="flex justify-between cursor-pointer"
+            >
+              Sign Out
+              <LogOut className="w-5 h-5 text-red-500" />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </div>
   );
