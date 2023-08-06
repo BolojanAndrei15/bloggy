@@ -47,7 +47,8 @@ export const authOptions = {
           throw new Error("Incorrect password");
         }
 
-        return user;
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
       },
     }),
   ],

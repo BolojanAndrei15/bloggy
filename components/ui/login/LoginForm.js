@@ -48,7 +48,6 @@ export default function LoginForm() {
       })
         .then((res) => {
           if (res.error != null) {
-            console.log(res.error);
             toast({
               variant: "destructive",
               title: `${res.error}`,
@@ -110,7 +109,7 @@ export default function LoginForm() {
         <CardHeader>
           <CardTitle className="flex items-center text-[1.2rem] font-bold sm:text-2xl">
             <FaBlogger className="w-16 h-16 mr-2" />
-            Log in intro your acz
+            Log in intro your account
           </CardTitle>
           <CardDescription className="text-sm">
             Welcome back! Please enter your username and password to log in.
