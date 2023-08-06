@@ -1,9 +1,9 @@
-import RegisterForm from "@/components/ui/register/registerForm";
+import RegisterForm from "@/components/ui/register/RegisterForm";
 
 export default function Register() {
   return (
-    <div className="flex justify-center">
-      <div>
+    <div className="h-[100vh] flex justify-center bg-slate-50">
+      <div className="mx-auto flex items-center">
         <RegisterForm />
       </div>
     </div>
