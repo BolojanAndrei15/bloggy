@@ -14,7 +14,19 @@ import { Input } from "../input";
 import { Label } from "../label";
 import { Button } from "../button";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Joi from "joi";
+
+const schema = Joi.object({
+  username: Joi.string().min(6).alphanum().required(),
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net", "org", "io"] },
+    })
+    .required(),
+  password: Joi.string().min(6).required(),
+});
 
 export default function RegisterForm() {
   const [input, setInput] = useState({
@@ -22,6 +34,19 @@ export default function RegisterForm() {
     email: "",
     password: "",
   });
+
+  const [error, setError] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    const validationResult = schema.validate(input);
+    const { valid, error } = validationResult;
+
+    console.log(error.details);
+  }, [input.username, input.email, input.password]);
 
   return (
     <div className="w-full sm:w-[30rem]">
