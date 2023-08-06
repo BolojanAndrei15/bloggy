@@ -16,14 +16,9 @@ import { Button } from "../button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Joi from "joi";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 
-const usernameSchema = Joi.string()
-  .min(6)
-  .alphanum()
-  .required()
-  .label("Username");
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const emailSchema = Joi.string()
   .email({
@@ -33,36 +28,31 @@ const emailSchema = Joi.string()
   .label("Email");
 const passwordSchema = Joi.string().min(6).required().label("Password");
 
-export default function RegisterForm() {
+export default function LoginForm() {
   const [input, setInput] = useState({
-    username: "",
     email: "",
     password: "",
   });
   const { toast } = useToast();
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pass, showPass] = useState(false);
 
   const handleRegistration = async () => {
-    if (username == true && email == true && password == true) {
-      const response = await axios
-        .post("http://localhost:3000/api/register", {
-          username: input.username,
-          email: input.email,
-          password: input.password,
-        })
+    if (email == true && password == true) {
+      signIn("credentials", {
+        ...input,
+        redirect: false,
+      })
         .then(() => {
           toast({
-            vairants: "succes",
-            title: "User has been created",
-            description: `Welcome: ${input.username}`,
+            title: "Logged in succesfully",
+            description: `Welcome: ${input.email}`,
           });
 
-          router.push("/login");
+          router.push("/");
         })
         .catch((err) => {
           toast({
@@ -75,23 +65,10 @@ export default function RegisterForm() {
       toast({
         variant: "destructive",
         title: "Ups... You have to enter some data",
-        description: "For registration, you shall add all the data required",
+        description: "For login, you shall add all the data required",
       });
     }
   };
-
-  useEffect(() => {
-    const validateUsername = usernameSchema.validate(input.username);
-    const { valid, error } = validateUsername;
-
-    if (error) {
-      if (error.details[0].path) {
-        setUsername(error.message);
-      }
-    } else {
-      setUsername(true);
-    }
-  }, [input.username]);
 
   useEffect(() => {
     const validateEmail = emailSchema.validate(input.email);
@@ -124,34 +101,14 @@ export default function RegisterForm() {
         <CardHeader>
           <CardTitle className="flex items-center text-[1.2rem] font-bold sm:text-2xl">
             <FaBlogger className="w-16 h-16 mr-2" />
-            Register for a Blog Account
+            Log in intro your acz
           </CardTitle>
           <CardDescription className="text-sm">
-            Welcome to our blogging community! To start sharing your thoughts
-            and ideas with the world, please fill out the registration form
-            below to create your blog account.
+            Welcome back! Please enter your username and password to log in.
           </CardDescription>
         </CardHeader>
         <CardContent className="mb-5">
           <div className="flex flex-col space-y-3">
-            <div className="flex flex-col space-y-2">
-              <Label>Username:</Label>
-              <Input
-                className={`${
-                  username != true ? "border-red-500" : "border-green-500"
-                } `}
-                onChange={(e) =>
-                  setInput({ ...input, username: e.target.value })
-                }
-                type="text"
-                placeholder="Enter your username..."
-              />
-              {username !== "" ? (
-                <Label className="text-[0.8rem] text-red-500">{username}</Label>
-              ) : (
-                ""
-              )}
-            </div>
             <div className="flex flex-col space-y-2">
               <Label>Email:</Label>
               <Input
