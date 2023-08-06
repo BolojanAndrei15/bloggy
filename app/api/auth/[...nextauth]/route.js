@@ -47,11 +47,30 @@ export const authOptions = {
           throw new Error("Incorrect password");
         }
 
-        const { password, ...userWithoutPassword } = user;
-        return userWithoutPassword;
+        const { password, ...newuser } = user;
+
+        return newuser;
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, session }) {
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+        };
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      console.log("session callback", { session, user, token });
+      return {
+        ...session,
+        user: { ...session.user, id: token.id },
+      };
+    },
+  },
   session: {
     strategy: "jwt",
   },

@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 
 const usernameSchema = Joi.string()
   .min(6)
+  .max(12)
   .alphanum()
   .required()
   .label("Username");
@@ -59,9 +60,8 @@ export default function RegisterForm() {
           toast({
             vairants: "succes",
             title: "User has been created",
-            description: `Welcome: ${input.username}`,
+            description: `Please enter your credentials to log in`,
           });
-
           router.push("/login");
         })
         .catch((err) => {

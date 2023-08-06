@@ -1,4 +1,5 @@
 "use client";
+
 import { FaBlogger } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
@@ -12,10 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut } from "lucide-react";
+import { FilePlus, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
   const { data: session, status } = useSession();
+
   return (
     <div className="sticky top-0 w-full h-16 bg-white flex justify-between pb-6 pt-4 border-b border-slate-100 z-50">
       <Link href="/" className="flex items-center">
@@ -36,10 +39,13 @@ function Navbar() {
             </Avatar>
             <h1 className="font-semibold text-md">{session.user.name}</h1>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="w-[10rem]">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-
+            <DropdownMenuItem className="flex justify-between cursor-pointer">
+              Add post
+              <FilePlus className="w-5 h-5" />
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => signOut()}
               className="flex justify-between cursor-pointer"

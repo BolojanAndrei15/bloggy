@@ -47,6 +47,7 @@ export default function LoginForm() {
         redirect: false,
       })
         .then((res) => {
+          console.log(res);
           if (res.error != null) {
             toast({
               variant: "destructive",
