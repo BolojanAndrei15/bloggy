@@ -210,7 +210,7 @@ export default function RegisterForm() {
                 Already have an account?
                 <Link
                   className="text-slate-900 font-semibold ml-1"
-                  href={"signin"}
+                  href={"/login"}
                 >
                   Sign In
                 </Link>

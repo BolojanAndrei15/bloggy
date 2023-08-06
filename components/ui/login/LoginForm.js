@@ -42,30 +42,39 @@ export default function LoginForm() {
 
   const handleRegistration = async () => {
     if (email == true && password == true) {
-      signIn("credentials", {
+      await signIn("credentials", {
         ...input,
         redirect: false,
       })
-        .then(() => {
-          toast({
-            title: "Logged in succesfully",
-            description: `Welcome: ${input.email}`,
-          });
+        .then((res) => {
+          if (res.error != null) {
+            console.log(res.error);
+            toast({
+              variant: "destructive",
+              title: `${res.error}`,
+              description: `Please enter the credentials again`,
+            });
+          } else {
+            toast({
+              title: "Welocme Back",
+              description: `${input.email}`,
+            });
 
-          router.push("/");
+            router.push("/");
+          }
         })
         .catch((err) => {
           toast({
             variant: "destructive",
             title: "Ups, something went wrong",
-            description: `${err.request.response}`,
+            description: `${err}`,
           });
         });
     } else {
       toast({
         variant: "destructive",
         title: "Ups... You have to enter some data",
-        description: "For login, you shall add all the data required",
+        description: "To log in, you shall add all the data required",
       });
     }
   };
@@ -159,17 +168,17 @@ export default function LoginForm() {
           <div className="flex flex-col w-full space-y-5">
             <div className="w-full flex ">
               <Button onClick={handleRegistration} className="w-full">
-                Register now
+                Log In
               </Button>
             </div>
             <div className="flex justify-center">
               <p className="text-sm text-slate-500 ">
-                Already have an account?
+                Do you want an account?
                 <Link
                   className="text-slate-900 font-semibold ml-1"
-                  href={"signin"}
+                  href={"/register"}
                 >
-                  Sign In
+                  Register now
                 </Link>
               </p>
             </div>
