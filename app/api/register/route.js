@@ -1,19 +1,32 @@
 import bcrypt from "bcrypt";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import Joi from "joi";
 
 const prisma = new PrismaClient();
+
+const userSchema = Joi.object({
+  username: Joi.string().min(6).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
 
 export async function POST(req) {
   const body = await req.json();
   const { username, email, password } = body;
 
-  console.log(body);
-
   if (!username && !email && !password) {
     return new NextResponse("Missing name, email, or password", {
       status: 400,
     });
+  }
+
+  const validation = userSchema.validate(body);
+
+  const { error } = validation;
+
+  if (error) {
+    return new NextResponse(error.message, { status: 400 });
   }
 
   const existEmail = await prisma.user.findUnique({
