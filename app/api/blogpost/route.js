@@ -8,8 +8,7 @@ export async function GET(req, res) {
     return new NextResponse("Method not allowed", { status: 405 });
   }
 
-  const data = await prisma.blogPost.findMany();
-  const posts = JSON.stringify(data);
+  const posts = await prisma.blogPost.findMany();
 
-  return new NextResponse(posts, { status: 200 });
+  return NextResponse.json(posts, { status: 200 });
 }
