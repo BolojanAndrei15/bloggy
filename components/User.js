@@ -10,9 +10,11 @@ import {
 import { FilePlus, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 function User() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   return (
     <div>
@@ -29,7 +31,10 @@ function User() {
         <DropdownMenuContent className="w-[10rem]">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="flex justify-between cursor-pointer">
+          <DropdownMenuItem
+            onClick={() => router.push("/create")}
+            className="flex justify-between cursor-pointer"
+          >
             Add post
             <FilePlus className="w-5 h-5" />
           </DropdownMenuItem>
