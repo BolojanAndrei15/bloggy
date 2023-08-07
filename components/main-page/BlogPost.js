@@ -5,7 +5,10 @@ import Link from "next/link";
 function BlogPost({ id, title, desc, createdAt, tags, img }) {
   return (
     <div>
-      <Link href={id} className="flex flex-col justify-between h-full">
+      <Link
+        href={`/post/${id}`}
+        className="flex flex-col justify-between h-full"
+      >
         <div>
           <div className="min-w-full min-h-96 max-h-[22rem] max-w-full">
             <img className="object-cover h-[20rem] w-full" src={img} />

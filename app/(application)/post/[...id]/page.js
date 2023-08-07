@@ -6,10 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Error from "next/error";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 
 function PostPage() {
   const params = useParams();
+
   const [id] = params.id;
 
   const { data, isLoading, isError } = useQuery({
