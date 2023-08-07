@@ -31,7 +31,9 @@ function PostPage() {
       ) : (
         <div>
           <div className="flex flex-col mb-10">
-            <img src={data.image} />
+            <div>
+              <img className="object-cover h-[30rem] w-full" src={data.image} />
+            </div>
             <div className="mt-2 flex flex-col space-y-2 mb-2">
               <h1 className="text-2xl font-bold">{data.title}</h1>
               <h2 className="text-md font-semibold text-slate-800">

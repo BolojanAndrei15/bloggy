@@ -6,7 +6,9 @@ function BlogPost({ id, title, desc, createdAt, tags, img }) {
   return (
     <div>
       <Link href={id} className="flex flex-col">
-        <img src={img} />
+        <div className="min-w-full min-h-96 max-h-[22rem] max-w-full">
+          <img className="object-cover h-[20rem] w-full" src={img} />
+        </div>
         <div className="flex flex-col mt-3 ">
           <div>
             <p className="font-semibold text-sm text-slate-800">{createdAt}</p>
