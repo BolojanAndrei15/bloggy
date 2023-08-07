@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Error from "next/error";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 function PostPage() {
   const params = useParams();
@@ -20,7 +21,7 @@ function PostPage() {
       return res.data;
     },
   });
-  console.log(data);
+
   return (
     <>
       {isLoading ? (
@@ -40,7 +41,9 @@ function PostPage() {
             <div className="w-full flex justify-start">
               <div className="flex space-x-2">
                 {data.tags.map((tag) => (
-                  <Badge className="text-[10px] md:text-sm">{tag}</Badge>
+                  <Badge key={tag} className="text-[10px] md:text-sm">
+                    {tag}
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -50,8 +53,10 @@ function PostPage() {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="font-bold text-sm">{data.authorId}</h1>
-                <p className="font-semibold bold text-sm ">{data.createdAt}</p>
+                <h1 className="font-bold text-sm">{data.authorName}</h1>
+                <p className="font-semibold bold text-sm ">
+                  Created: {data.createdAt}
+                </p>
               </div>
             </div>
           </div>

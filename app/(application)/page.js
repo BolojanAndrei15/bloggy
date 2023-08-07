@@ -30,7 +30,6 @@ export default function Home() {
               title={post.title}
               desc={post.description}
               createdAt={post.createdAt}
-              author={post.authorId}
               tags={post.tags.map((tag) => tag)}
             />
           ))

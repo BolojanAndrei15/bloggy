@@ -12,7 +12,7 @@ function BlogPost({ id, title, desc, createdAt, tags, img }) {
             <p className="font-semibold text-sm text-slate-800">{createdAt}</p>
           </div>
           <h1 className="font-bold text-lg ">{title}</h1>
-          <h2 className="font-medium text-sm">{desc.slice(0, 100) + "..."}</h2>
+          <h2 className="font-medium text-sm">{desc.slice(0, 140) + "..."}</h2>
         </div>
         <div className="w-full flex justify-start mt-3">
           <div className="flex space-x-2">
