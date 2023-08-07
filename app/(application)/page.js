@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function Home() {
   const { data, isLoading } = useQuery({
-    queryKey: ["post"],
+    queryKey: ["posts"],
     queryFn: async () => {
       const res = await axios.get("http://localhost:3000/api/blogpost");
       return res.data;
@@ -26,11 +26,12 @@ export default function Home() {
             <BlogPost
               key={post.id}
               id={post.id}
+              img={post.image}
               title={post.title}
               desc={post.description}
               createdAt={post.createdAt}
               author={post.authorId}
-              tags={["#about", "#tech"]}
+              tags={post.tags.map((tag) => tag)}
             />
           ))
         )}
