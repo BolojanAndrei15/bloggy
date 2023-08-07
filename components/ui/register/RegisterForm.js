@@ -123,7 +123,10 @@ export default function RegisterForm() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center text-[1.2rem] font-bold sm:text-2xl">
-            <FaBlogger className="w-16 h-16 mr-2" />
+            <Link href={"/"}>
+              {" "}
+              <FaBlogger className="w-16 h-16 mr-2" />
+            </Link>
             Register for a Blog Account
           </CardTitle>
           <CardDescription className="text-sm">
@@ -137,6 +140,7 @@ export default function RegisterForm() {
             <div className="flex flex-col space-y-2">
               <Label>Username:</Label>
               <Input
+                value={input.username}
                 className={`${
                   username != true ? "border-red-500" : "border-green-500"
                 } `}
@@ -155,6 +159,7 @@ export default function RegisterForm() {
             <div className="flex flex-col space-y-2">
               <Label>Email:</Label>
               <Input
+                value={input.email}
                 className={`${
                   email != true ? "border-red-500" : "border-green-500"
                 } `}
@@ -172,6 +177,7 @@ export default function RegisterForm() {
             <div className="flex flex-col space-y-2">
               <Label>Password:</Label>
               <Input
+                value={input.password}
                 className={`${
                   password != true ? "border-red-500" : "border-green-500"
                 } `}

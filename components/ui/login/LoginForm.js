@@ -109,7 +109,10 @@ export default function LoginForm() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center text-[1.2rem] font-bold sm:text-2xl">
-            <FaBlogger className="w-16 h-16 mr-2" />
+            <Link href={"/"}>
+              {" "}
+              <FaBlogger className="w-16 h-16 mr-2" />
+            </Link>
             Log in intro your account
           </CardTitle>
           <CardDescription className="text-sm">
@@ -124,6 +127,7 @@ export default function LoginForm() {
                 className={`${
                   email != true ? "border-red-500" : "border-green-500"
                 } `}
+                value={input.email}
                 onChange={(e) => setInput({ ...input, email: e.target.value })}
                 type="email"
                 placeholder="Enter your email adress..."
@@ -144,6 +148,7 @@ export default function LoginForm() {
                 onChange={(e) =>
                   setInput({ ...input, password: e.target.value })
                 }
+                value={input.password}
                 type={pass ? "text" : "password"}
                 placeholder="Enter your password..."
               />
