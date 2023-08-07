@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { FileUp, ImagePlus } from "lucide-react";
+
 import {
   Select,
   SelectContent,
@@ -13,10 +14,49 @@ import { Button } from "@/components/ui/button";
 import ReactQuill from "react-quill";
 import { modules } from "@/lib/react-quill-modules";
 import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useToast } from "@/components/ui/use-toast";
+
+const PostInput = ({ title, placeholder }) => {
+  return (
+    <div className="flex flex-col space-y-1">
+      <h1 className="font-medium">{title}</h1>
+      <Input placeholder={placeholder} />
+    </div>
+  );
+};
 
 function CreatePage() {
   const [value, setValue] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { toast } = useToast();
+
+  const isValidImage = (file) => {
+    return file.type.startsWith("image/");
+  };
+
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
+    setSelectedImage(URL.createObjectURL(file));
+    if (file) {
+      if (isValidImage(file)) {
+        handleImageChange(file);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description:
+            "Invalid image format. Please upload an image file (e.g., JPG, PNG).",
+        });
+      }
+    }
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/*",
+  });
+
   return (
     <div>
       <div className="mt-5 mb-5">
@@ -26,33 +66,51 @@ function CreatePage() {
           Share Your Voice!
         </p>
       </div>
-
       <div className="mb-7">
-        <div className="flex h-[250px] sm:h-[450px] w-full items-center justify-center rounded-md border border-dashed text-sm cursor-pointer">
-          <div className="flex flex-col justify-center items-center text-slate-300 ">
-            <ImagePlus strokeWidth={0.75} className="w-20 h-20" />
-            <h1 className="font-semibold">Upload Image</h1>
-            <p></p>
-          </div>
+        <div
+          {...getRootProps()}
+          className={`file-drop-area ${
+            isDragActive ? "drag-active" : ""
+          } flex h-[250px] sm:h-[450px] w-full items-center justify-center rounded-md border border-dashed text-sm cursor-pointer `}
+        >
+          <input {...getInputProps()} accept="image/*" />
+          {selectedImage ? (
+            <img
+              src={selectedImage}
+              alt="Upload preview"
+              className="w-full h-full object-cover "
+            />
+          ) : (
+            <div className="flex flex-col justify-center items-center text-slate-300 ">
+              <ImagePlus strokeWidth={0.75} className="w-20 h-20" />
+              <h1 className="font-semibold">Upload Image</h1>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col space-y-4">
-        <div>
-          <h1 className="font-semibold">Title of the post</h1>
-          <Input placeholder="Example: Exploring the Enchanting Beauty of Kyoto's Cherry Blossoms" />
-        </div>
+        <PostInput
+          title={"Title of the post"}
+          placeholder={
+            "The Art of Mindfulness: Finding Peace in a Chaotic World"
+          }
+        />
 
-        <div>
-          <h1>Description of the post</h1>
-          <Input placeholder="Example: mmerse yourself in the breathtaking beauty of ..." />
-        </div>
+        <PostInput
+          title={"Description of the post"}
+          placeholder={
+            "In a world filled with constant distractions and ever-increasing demands, finding inner peace ..."
+          }
+        />
 
-        <div className="flex flex-col md:flex-row w-full justify-between">
+        <div className="flex flex-col md:flex-row w-full items-center justify-between">
           <div className="w-full md:w-[70%] xl:w-[80%] mr-2">
-            <h1>Tags for the post</h1>
-            <Input placeholder="Example: #beauty, #nature, #life" />
+            <PostInput
+              title={"Tags of the post"}
+              placeholder={"Example: #beauty, #nature, #life"}
+            />
           </div>
-          <div className="w-full md:w-[30%] xl:w-[20%] mt-3 md:mt-0">
+          <div className="w-full md:w-[30%] xl:w-[20%] mt-3 md:mt-0 ">
             <h1>Select category</h1>
             <Select>
               <SelectTrigger className="w-full md:w-full">
