@@ -28,7 +28,12 @@ export async function POST(req, res) {
     (currentDate - createdAtDate) / (1000 * 60)
   );
 
-  if (timeDifferenceInMinutes >= 60) {
+  if (timeDifferenceInMinutes < 1) {
+    return NextResponse.json({
+      ...post,
+      createdAt: `Just now`,
+    });
+  } else if (timeDifferenceInMinutes >= 60) {
     // Calculate the time difference in hours
     const timeDifferenceInHours = Math.floor(timeDifferenceInMinutes / 60);
     return NextResponse.json({
