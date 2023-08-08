@@ -26,6 +26,10 @@ const PostInput = ({ title, placeholder }) => {
     </div>
   );
 };
+const isValidSize = (file) => {
+  const maxFileSize = 2 * 1024 * 1024;
+  return file && file.size <= maxFileSize;
+};
 
 function CreatePage() {
   const [value, setValue] = useState("");
@@ -36,12 +40,24 @@ function CreatePage() {
     return file.type.startsWith("image/");
   };
 
+  const handleImageChange = (file) => {
+    setSelectedImage(URL.createObjectURL(file));
+  };
+
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
-    setSelectedImage(URL.createObjectURL(file));
+
     if (file) {
       if (isValidImage(file)) {
-        handleImageChange(file);
+        if (isValidSize(file)) {
+          handleImageChange(file);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Image size exceeds the maximum limit (2MB)",
+          });
+        }
       } else {
         toast({
           variant: "destructive",
@@ -83,7 +99,7 @@ function CreatePage() {
           ) : (
             <div className="flex flex-col justify-center items-center text-slate-300 ">
               <ImagePlus strokeWidth={0.75} className="w-20 h-20" />
-              <h1 className="font-semibold">Upload Image</h1>
+              <h1 className="text-md">{"Upload image (max 2 MB)"}</h1>
             </div>
           )}
         </div>
