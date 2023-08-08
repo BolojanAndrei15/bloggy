@@ -44,7 +44,7 @@ export const authOptions = {
         );
 
         if (!passwordMatch) {
-          throw new Error("Incorrect password");
+          throw new Error("Incorect password");
         }
 
         const { password, ...newuser } = user;

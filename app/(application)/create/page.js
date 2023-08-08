@@ -1,8 +1,15 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { FileUp, ImagePlus } from "lucide-react";
-
+import { BookmarkPlus, FileUp, ImagePlus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -136,9 +143,36 @@ function CreatePage() {
                 <SelectItem value="light">Light</SelectItem>
                 <SelectItem value="dark">Dark</SelectItem>
                 <SelectItem value="system">System</SelectItem>
-                <Button variant={"secondary"} className="w-full">
-                  Add new category
-                </Button>
+                <Dialog>
+                  <DialogTrigger className="w-full">
+                    {" "}
+                    <Button className="w-full flex justify-between">
+                      Add new category
+                      <BookmarkPlus />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        Discover and Define: Create Your Category
+                      </DialogTitle>
+                      <DialogDescription>
+                        The Art of Categorization: Sculpt Your Own Realm of
+                        Imagination!
+                      </DialogDescription>
+                    </DialogHeader>
+                    <PostInput
+                      title={"Name of the new category"}
+                      placeholder={"Example: Tech ..."}
+                    />
+                    <div className="flex w-full md:justify-end">
+                      <Button className="w-full md:w-48 flex justify-between">
+                        Add new Category
+                        <BookmarkPlus />
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </SelectContent>
             </Select>
           </div>

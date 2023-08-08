@@ -65,6 +65,15 @@ export default function RegisterForm() {
           router.push("/login");
         })
         .catch((err) => {
+          if (err.request.response == "User with that email already exists!") {
+            setEmail(err.request.response);
+          }
+
+          if (
+            err.request.response == "User with that username already exists!"
+          ) {
+            setUsername(err.request.response);
+          }
           toast({
             variant: "destructive",
             title: "Ups, something went wrong",
@@ -142,7 +151,11 @@ export default function RegisterForm() {
               <Input
                 value={input.username}
                 className={`${
-                  username != true ? "border-red-500" : "border-green-500"
+                  input.username !== ""
+                    ? username != true
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : "border"
                 } `}
                 onChange={(e) =>
                   setInput({ ...input, username: e.target.value })
@@ -150,8 +163,14 @@ export default function RegisterForm() {
                 type="text"
                 placeholder="Enter your username..."
               />
-              {username !== "" ? (
-                <Label className="text-[0.8rem] text-red-500">{username}</Label>
+              {input.username ? (
+                email !== "" ? (
+                  <Label className="text-[0.8rem] text-red-500">
+                    {username}
+                  </Label>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
               )}
@@ -161,14 +180,22 @@ export default function RegisterForm() {
               <Input
                 value={input.email}
                 className={`${
-                  email != true ? "border-red-500" : "border-green-500"
+                  input.email !== ""
+                    ? email != true
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : "border"
                 } `}
                 onChange={(e) => setInput({ ...input, email: e.target.value })}
                 type="email"
                 placeholder="Enter your email adress..."
               />
-              {email !== "" ? (
-                <Label className="text-[0.8rem] text-red-500">{email}</Label>
+              {input.email ? (
+                email !== "" ? (
+                  <Label className="text-[0.8rem] text-red-500">{email}</Label>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
               )}
@@ -179,7 +206,11 @@ export default function RegisterForm() {
               <Input
                 value={input.password}
                 className={`${
-                  password != true ? "border-red-500" : "border-green-500"
+                  input.password !== ""
+                    ? password != true
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : ""
                 } `}
                 onChange={(e) =>
                   setInput({ ...input, password: e.target.value })
@@ -187,8 +218,14 @@ export default function RegisterForm() {
                 type={pass ? "text" : "password"}
                 placeholder="Enter your password..."
               />
-              {password !== "" ? (
-                <Label className="text-[0.8rem] text-red-500">{password}</Label>
+              {input.password !== "" ? (
+                password !== "" ? (
+                  <Label className="text-[0.8rem] text-red-500">
+                    {password}
+                  </Label>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
               )}

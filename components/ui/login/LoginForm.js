@@ -35,7 +35,7 @@ export default function LoginForm() {
   });
   const { toast } = useToast();
   const router = useRouter();
-
+  const lastPagePath = router.asPath;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pass, showPass] = useState(false);
@@ -47,23 +47,25 @@ export default function LoginForm() {
         redirect: false,
       })
         .then((res) => {
-          console.log(res);
           if (res.error != null) {
+            if (res.error == "User doesn't exist") {
+              setEmail(res.error);
+            }
+            if (res.error == "Incorect password") {
+              setPassword(res.error);
+            }
             toast({
               variant: "destructive",
               title: `${res.error}`,
               description: `Please enter the credentials again`,
             });
           } else {
-            toast({
-              title: "Welocme Back",
-              description: `${input.email}`,
-            });
-
             router.push("/");
           }
         })
         .catch((err) => {
+          setEmail("");
+          setPassword("");
           toast({
             variant: "destructive",
             title: "Ups, something went wrong",
@@ -125,15 +127,23 @@ export default function LoginForm() {
               <Label>Email:</Label>
               <Input
                 className={`${
-                  email != true ? "border-red-500" : "border-green-500"
+                  input.email !== ""
+                    ? email != true
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : "border"
                 } `}
                 value={input.email}
                 onChange={(e) => setInput({ ...input, email: e.target.value })}
                 type="email"
                 placeholder="Enter your email adress..."
               />
-              {email !== "" ? (
-                <Label className="text-[0.8rem] text-red-500">{email}</Label>
+              {input.email ? (
+                email !== "" ? (
+                  <Label className="text-[0.8rem] text-red-500">{email}</Label>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
               )}
@@ -143,7 +153,11 @@ export default function LoginForm() {
               <Label>Password:</Label>
               <Input
                 className={`${
-                  password != true ? "border-red-500" : "border-green-500"
+                  input.password !== ""
+                    ? password != true
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : ""
                 } `}
                 onChange={(e) =>
                   setInput({ ...input, password: e.target.value })
@@ -152,8 +166,14 @@ export default function LoginForm() {
                 type={pass ? "text" : "password"}
                 placeholder="Enter your password..."
               />
-              {password !== "" ? (
-                <Label className="text-[0.8rem] text-red-500">{password}</Label>
+              {input.password !== "" ? (
+                password !== "" ? (
+                  <Label className="text-[0.8rem] text-red-500">
+                    {password}
+                  </Label>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
               )}
