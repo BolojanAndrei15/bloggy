@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { BookmarkPlus, FileUp, ImagePlus } from "lucide-react";
+import { BookmarkPlus, ImagePlus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
