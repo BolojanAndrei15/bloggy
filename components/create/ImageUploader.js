@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { ImagePlus } from "lucide-react";
+import useValidationStore from "@/lib/validation-store";
 
 const isValidSize = (file) => {
   const maxFileSize = 2 * 1024 * 1024;
@@ -15,11 +16,16 @@ const isValidImage = (file) => {
 };
 
 function ImageUploader() {
+  const { setValidImage } = useValidationStore();
   const [selectedImage, setSelectedImage] = useState(null);
   const { toast } = useToast();
   const handleImageChange = (file) => {
     setSelectedImage(URL.createObjectURL(file));
   };
+
+  useState(() => {
+    setValidImage(selectedImage);
+  }, [selectedImage]);
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];

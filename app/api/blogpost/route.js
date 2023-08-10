@@ -33,3 +33,47 @@ export async function GET(req, res) {
 
   return NextResponse.json(posts, { status: 200 });
 }
+export async function POST(req, res) {
+  if (req.method !== "POST") {
+    return new NextResponse("Method not allowed", { status: 405 });
+  }
+  const body = await req.json();
+
+  if (!body) {
+    return new NextResponse("Body should not be empty", { status: 404 });
+  }
+
+  const {
+    title,
+    description,
+    categoryId,
+    tags,
+    content,
+    image,
+    authorName,
+    authorId,
+  } = body;
+
+  const createPost = await prisma.blogPost.create({
+    data: {
+      title,
+      description,
+      category: {
+        connect: { id: categoryId },
+      },
+      tags,
+      content,
+      image,
+      authorName,
+      author: {
+        connect: { id: authorId },
+      },
+    },
+  });
+
+  if (!createPost) {
+    return new NextResponse("Something went wrong", { status: 400 });
+  }
+
+  return NextResponse.json(createPost);
+}

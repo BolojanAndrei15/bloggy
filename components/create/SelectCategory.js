@@ -20,12 +20,55 @@ import { BookmarkPlus } from "lucide-react";
 
 import axios from "axios";
 import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
+import Joi from "joi";
+import { Label } from "../ui/label";
+import useValidationStore from "@/lib/validation-store";
+
+const categoryValidation = Joi.string()
+  .min(5)
+  .max(15)
+  .required()
+  .label("Category");
 
 function SelectCategory() {
+  const { setSelectedCategory } = useValidationStore();
+
+  const [selectedCategory, setCategory] = useState("");
+  const [input, setInput] = useState({
+    category: "",
+    validCategory: false,
+  });
+
+  useEffect(() => {
+    if (selectedCategory !== "") {
+      setSelectedCategory(selectedCategory);
+    } else {
+      setSelectedCategory("");
+    }
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    setInput({ category: "", validCategory: false });
+  }, []);
+
+  useEffect(() => {
+    const validate = categoryValidation.validate(input.category);
+    const { error } = validate;
+
+    if (input.category !== "") {
+      if (error) {
+        setInput({ ...input, validCategory: error.details[0].message });
+      } else {
+        setInput({ ...input, validCategory: true });
+      }
+    }
+  }, [input.title]);
+
   const { data, isLoading } = useQuery({
     queryKey: ["category"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/api/category");
+      const res = await axios.get("/api/category");
       return res.data;
     },
   });
@@ -40,7 +83,11 @@ function SelectCategory() {
           {isLoading
             ? ""
             : data.map((category) => (
-                <SelectItem key={category.id} value={category.name}>
+                <SelectItem
+                  onClick={(e) => setCategory(category.id)}
+                  key={category.id}
+                  value={category.name}
+                >
                   {category.name}
                 </SelectItem>
               ))}
@@ -63,11 +110,28 @@ function SelectCategory() {
                   Imagination!
                 </DialogDescription>
               </DialogHeader>
-              <h1 className="font-medium">Add new description</h1>
+              <h1 className="font-medium">Add new category</h1>
               <Input
-                className=""
+                value={input.category}
+                onChange={(e) =>
+                  setInput({ ...input, category: e.target.value })
+                }
+                className={`${
+                  input.category !== ""
+                    ? input.validCategory !== true
+                      ? "border-red-500"
+                      : "border-green-500"
+                    : ""
+                }`}
                 placeholder="Example: School or Tech or ..."
               />
+              {input.validCategory !== false && input.category !== "" ? (
+                <Label className="text-sm text-red-500">
+                  {input.validCategory}
+                </Label>
+              ) : (
+                ""
+              )}
               <div className="flex w-full md:justify-end">
                 <Button className="w-full md:w-48 flex justify-between">
                   Add new Category

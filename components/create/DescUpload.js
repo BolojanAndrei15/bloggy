@@ -6,7 +6,7 @@ import useValidationStore from "@/lib/validation-store";
 
 const descValidation = Joi.string()
   .min(150)
-  .max(300)
+  .max(400)
   .required()
   .label("Description");
 
@@ -17,6 +17,9 @@ function DescUpload() {
     desc: "",
     validDesc: false,
   });
+  useEffect(() => {
+    setInput({ desc: "", validDesc: false });
+  }, []);
 
   useEffect(() => {
     const validate = descValidation.validate(input.desc);
@@ -35,7 +38,7 @@ function DescUpload() {
 
   return (
     <div className="flex flex-col space-y-1">
-      <h1 className="font-medium">Title of the post</h1>
+      <h1 className="font-medium">Description of the post</h1>
       <Input
         onChange={(e) => setInput({ ...input, desc: e.target.value })}
         className={`${
@@ -45,7 +48,7 @@ function DescUpload() {
               : "border-green-500"
             : ""
         }`}
-        placeholder="The Art of Mindfulness: Finding Peace in a Chaotic World"
+        placeholder="In a world filled with constant distractions and ever-increasing demands, finding inner peace has become a cherished pursuit..."
       />
       {input.validDesc !== false && input.desc !== "" ? (
         <Label className="text-sm text-red-500">{input.validDesc}</Label>

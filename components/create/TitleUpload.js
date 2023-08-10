@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import Joi from "joi";
 import { Label } from "../ui/label";
 import useValidationStore from "@/lib/validation-store";
-const titleValidation = Joi.string().min(80).max(250).required().label("Title");
+const titleValidation = Joi.string().min(50).max(250).required().label("Title");
 
 function TitleUpload() {
   const { setTitleValidation } = useValidationStore();
@@ -12,6 +12,10 @@ function TitleUpload() {
     title: "",
     validTitle: false,
   });
+
+  useEffect(() => {
+    setInput({ title: "", validTitle: false });
+  }, []);
 
   useEffect(() => {
     const validate = titleValidation.validate(input.title);
@@ -40,7 +44,7 @@ function TitleUpload() {
               : "border-green-500"
             : ""
         }`}
-        placeholder="The Art of Mindfulness: Finding Peace in a Chaotic World"
+        placeholder="The Art of Mindfulness: Finding Peace in a Chaotic World..."
       />
       {input.validTitle !== false && input.title !== "" ? (
         <Label className="text-sm text-red-500">{input.validTitle}</Label>

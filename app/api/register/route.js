@@ -1,9 +1,5 @@
 import bcrypt from "bcrypt";
-<<<<<<< HEAD
 import { PrismaClient } from "@prisma/client";
-=======
-import { Prisma, PrismaClient } from "@prisma/client";
->>>>>>> 7e1eb2bfd88f66b272203fd37a6a855ba21c961d
 import { NextResponse } from "next/server";
 import Joi from "joi";
 

@@ -7,6 +7,11 @@ function TagUpload() {
   const [inputText, setInputText] = useState("");
   const [hashtags, setHashtags] = useState([]);
 
+  useEffect(() => {
+    setInputText("");
+    setHashtags([]);
+  });
+
   const extractHashtags = (text) => {
     const regex = /(?<=\s|^)(#[a-zA-Z0-9_]{2,})(?=\s|$)/g;
     const matches = text.match(regex);

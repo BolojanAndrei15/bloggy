@@ -1,73 +1,31 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ReactQuill from "react-quill";
 import { modules } from "@/lib/react-quill-modules";
 import "react-quill/dist/quill.snow.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast, useToast } from "@/components/ui/use-toast";
-import Filter from "bad-words";
-
 import ImageUploader from "@/components/create/ImageUploader";
 import Heading from "@/components/create/Heading";
 import SelectCategory from "@/components/create/SelectCategory";
-import Joi from "joi";
+
 import { Label } from "@/components/ui/label";
 import TagUpload from "@/components/create/TagUpload";
 import TitleUpload from "@/components/create/TitleUpload";
 import DescUpload from "@/components/create/DescUpload";
+import axios from "axios";
 
-const titleValidation = Joi.string().min(80).max(250).required().label("Title");
-const descriptionValidation = Joi.string()
-  .min(150)
-  .max(300)
-  .required()
-  .label("Title");
+import useValidationStore from "@/lib/validation-store";
+import { useSession } from "next-auth/react";
 
 function CreatePage() {
+  const { data: session } = useSession();
+  const { imageValid, selectedCategory, tagsValid, titleValid, descValid } =
+    useValidationStore();
+
   const [value, setValue] = useState("");
-
   const { toast } = useToast();
-  const [input, setInput] = useState({
-    title: "",
-    validTitle: false,
-    description: "",
-    validDescription: "",
-  });
-  useEffect(() => {
-    setInput({
-      ...input,
-      validTitle: false,
-      validDescription: false,
-      validTags: false,
-    });
-  }, []);
-  useEffect(() => {
-    const validate = titleValidation.validate(input.title);
-    const { error } = validate;
-
-    if (input.title !== "") {
-      if (error) {
-        setInput({ ...input, validTitle: error.details[0].message });
-      } else {
-        setInput({ ...input, validTitle: true });
-      }
-    }
-  }, [input.title]);
-
-  useEffect(() => {
-    const validate = descriptionValidation.validate(input.description);
-    const { error } = validate;
-
-    if (input.description !== "") {
-      if (error) {
-        setInput({ ...input, validDescription: error.details[0].message });
-      } else {
-        setInput({ ...input, validDescription: true });
-      }
-    }
-  }, [input.description]);
 
   return (
     <div>
@@ -101,7 +59,29 @@ function CreatePage() {
         </div>
       </div>
       <div className=" flex justify-end">
-        <Button className="w-full">Add post</Button>
+        <Button
+          onClick={() => {
+            axios
+              .post("http://localhost:3000/api/blogpost", {
+                title: titleValid,
+                description: descValid,
+                categoryId: "b3a6e408-953c-4bb1-992b-ea2a87d82af4",
+                tags: tagsValid,
+                image:
+                  "https://images.unsplash.com/photo-1495640452828-3df6795cf69b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                authorId: session.user.id,
+                authorName: session.user.name,
+                content: value,
+              })
+              .then(() => {
+                console.log("it worked");
+              })
+              .catch((err) => console.log(err));
+          }}
+          className="w-full"
+        >
+          Add post
+        </Button>
       </div>
     </div>
   );
