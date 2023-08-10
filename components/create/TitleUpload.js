@@ -9,6 +9,7 @@ function TitleUpload() {
   const titleValidation = Joi.string()
     .min(50)
     .max(250)
+    .trim()
     .required()
     .label("Title");
 
@@ -27,14 +28,43 @@ function TitleUpload() {
     [input.title]
   );
 
+  const validateInput = useCallback(
+    (e) => {
+      const { error } = titleValidation.validate(e.target.value);
+      if (error) {
+        setInput((prev) => ({ ...prev, validTitle: error.details[0].message }));
+      } else {
+        setInput((prev) => ({ ...prev, validTitle: true }));
+      }
+    },
+    [input.title]
+  );
+
   return (
     <div className="flex flex-col space-y-1">
       <h1 className="font-medium">Title of the post</h1>
       <Input
+        className={`${
+          input.title !== ""
+            ? input.validTitle !== true
+              ? "border-red-500"
+              : "border-green-500"
+            : ""
+        }`}
         value={input.title}
-        onChange={handleTextChange}
+        onChange={(e) => {
+          handleTextChange(e);
+          validateInput(e);
+        }}
         placeholder="The Art of Mindfulness: Finding Peace in a Chaotic World..."
       />
+      {input.validTitle !== false && input.title !== "" ? (
+        <Label className="text-sm font-medium text-red-500">
+          {input.validTitle}
+        </Label>
+      ) : (
+        ""
+      )}
     </div>
   );
 }
