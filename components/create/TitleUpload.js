@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import useValidationStore from "@/lib/validation-store";
 
 function TitleUpload() {
+  const { setTitleValidation } = useValidationStore();
   const titleValidation = Joi.string()
     .min(50)
     .max(250)
@@ -13,9 +14,7 @@ function TitleUpload() {
     .required()
     .label("Title");
 
-  const { setTitleValidation } = useValidationStore();
-  console.log("Title component");
-
+  console.log("Title");
   const [input, setInput] = useState({
     title: "",
     validTitle: false,
@@ -35,6 +34,7 @@ function TitleUpload() {
         setInput((prev) => ({ ...prev, validTitle: error.details[0].message }));
       } else {
         setInput((prev) => ({ ...prev, validTitle: true }));
+        setTitleValidation(e.target.value);
       }
     },
     [input.title]

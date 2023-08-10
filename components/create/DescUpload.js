@@ -35,6 +35,7 @@ function DescUpload() {
         setInput((prev) => ({ ...prev, validDesc: error.details[0].message }));
       } else {
         setInput((prev) => ({ ...prev, validDesc: true }));
+        setDescValidation(e.target.value);
       }
     },
     [input.desc]

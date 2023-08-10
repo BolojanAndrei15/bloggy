@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+"use client";
 
+import { useCallback, useEffect, useState } from "react";
 import useValidationStore from "@/lib/validation-store";
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-context-menu";
@@ -22,6 +23,7 @@ function TagUpload() {
       };
 
       const extractedHashtags = extractHashtags(input);
+      setTagsValidation(extractedHashtags);
       setHashtags(extractedHashtags);
     },
     [input]
@@ -30,7 +32,7 @@ function TagUpload() {
   const { setTagsValidation } = useValidationStore();
 
   return (
-    <div className="flex flex-col space-y-1">
+    <>
       <h1 className="font-semibold">Tags of the post</h1>
       <Input
         onChange={handleInputChange}
@@ -51,7 +53,7 @@ function TagUpload() {
       ) : (
         ""
       )}
-    </div>
+    </>
   );
 }
 

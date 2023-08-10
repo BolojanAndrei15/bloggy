@@ -58,7 +58,6 @@ export default function RegisterForm() {
         })
         .then(() => {
           toast({
-            vairants: "succes",
             title: "User has been created",
             description: `Please enter your credentials to log in`,
           });

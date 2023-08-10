@@ -7,7 +7,7 @@ import { ImagePlus } from "lucide-react";
 import useValidationStore from "@/lib/validation-store";
 
 const ImageUploader = () => {
-  console.log("Imgae component");
+  const { setValidImage, image } = useValidationStore();
   const [selectedImage, setSelectedImage] = useState(null);
   const { toast } = useToast();
 
@@ -18,7 +18,26 @@ const ImageUploader = () => {
       const isValidSize = file && file.size <= maxFileSize;
       if (isValidSize) {
         setSelectedImage(() => URL.createObjectURL(file));
+        setValidImage({
+          filePath: file.path,
+          fileName: file.name,
+          fileSize: file.size,
+          imageType: file.type,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Image size exceeds the maximum limit (2MB)",
+        });
       }
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description:
+          "Invalid image format. Please upload an image file (e.g., JPG, PNG).",
+      });
     }
   }, []);
 
