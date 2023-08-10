@@ -1,5 +1,3 @@
-import React from "react";
-
 function Heading() {
   return (
     <div className="mt-5 mb-5">

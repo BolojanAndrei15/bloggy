@@ -1,56 +1,35 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { ImagePlus } from "lucide-react";
 import useValidationStore from "@/lib/validation-store";
 
-const isValidSize = (file) => {
-  const maxFileSize = 2 * 1024 * 1024;
-  return file && file.size <= maxFileSize;
-};
-
-const isValidImage = (file) => {
-  return file.type.startsWith("image/");
-};
-
-function ImageUploader() {
-  const { setValidImage } = useValidationStore();
+const ImageUploader = () => {
+  console.log("Imgae component");
   const [selectedImage, setSelectedImage] = useState(null);
   const { toast } = useToast();
-  const handleImageChange = (file) => {
-    setSelectedImage(URL.createObjectURL(file));
-  };
 
-  useState(() => {
-    setValidImage(selectedImage);
-  }, [selectedImage]);
-
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-
-    if (file) {
-      if (isValidImage(file)) {
-        if (isValidSize(file)) {
-          handleImageChange(file);
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: "Image size exceeds the maximum limit (2MB)",
-          });
-        }
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description:
-            "Invalid image format. Please upload an image file (e.g., JPG, PNG).",
-        });
+  const handleImageChange = useCallback((file) => {
+    const isValidImage = file.type.startsWith("image/");
+    if (isValidImage) {
+      const maxFileSize = 2 * 1024 * 1024;
+      const isValidSize = file && file.size <= maxFileSize;
+      if (isValidSize) {
+        setSelectedImage(() => URL.createObjectURL(file));
       }
     }
   }, []);
+
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      handleImageChange(file);
+    },
+    [handleImageChange]
+  );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: "image/*",
@@ -78,6 +57,6 @@ function ImageUploader() {
       )}
     </div>
   );
-}
+};
 
 export default ImageUploader;
