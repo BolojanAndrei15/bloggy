@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import Joi from "joi";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -33,7 +34,19 @@ export async function GET(req, res) {
 
   return NextResponse.json(posts, { status: 200 });
 }
+
 export async function POST(req, res) {
+  const blogPostSchema = Joi.object({
+    title: Joi.string().required(),
+    content: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.object().optional(),
+    categoryId: Joi.string().optional(),
+    authorName: Joi.string().optional(),
+    authorId: Joi.string().required(),
+    tags: Joi.array().items(Joi.string()).required(),
+  });
+
   if (req.method !== "POST") {
     return new NextResponse("Method not allowed", { status: 405 });
   }
@@ -54,6 +67,11 @@ export async function POST(req, res) {
     authorId,
   } = body;
 
+  const { error } = blogPostSchema.validate(body);
+
+  if (error) {
+    return new NextResponse("Validation error", { status: 404 });
+  }
   const createPost = await prisma.blogPost.create({
     data: {
       title,

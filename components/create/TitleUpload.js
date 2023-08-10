@@ -14,7 +14,6 @@ function TitleUpload() {
     .required()
     .label("Title");
 
-  console.log("Title");
   const [input, setInput] = useState({
     title: "",
     validTitle: false,
@@ -32,6 +31,7 @@ function TitleUpload() {
       const { error } = titleValidation.validate(e.target.value);
       if (error) {
         setInput((prev) => ({ ...prev, validTitle: error.details[0].message }));
+        setTitleValidation("");
       } else {
         setInput((prev) => ({ ...prev, validTitle: true }));
         setTitleValidation(e.target.value);

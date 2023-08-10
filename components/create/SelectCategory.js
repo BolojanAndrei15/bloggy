@@ -23,19 +23,15 @@ function SelectCategory() {
   return (
     <>
       <h1 className="font-semibold ">Category of the post</h1>
-      <Select>
+      <Select onValueChange={setCategoryValid}>
         <SelectTrigger className="w-full ">
-          <SelectValue value={false} placeholder="No selected value" />
+          <SelectValue placeholder="No selected value" />
         </SelectTrigger>
         <SelectContent>
           {isLoading
             ? "Categories are loading..."
             : data.map((category) => (
-                <SelectItem
-                  onClick={() => setCategoryValid(category.id)}
-                  key={category.id}
-                  value={category.name}
-                >
+                <SelectItem key={category.id} value={category.id}>
                   {category.name}
                 </SelectItem>
               ))}

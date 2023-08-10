@@ -18,12 +18,7 @@ const ImageUploader = () => {
       const isValidSize = file && file.size <= maxFileSize;
       if (isValidSize) {
         setSelectedImage(() => URL.createObjectURL(file));
-        setValidImage({
-          filePath: file.path,
-          fileName: file.name,
-          fileSize: file.size,
-          imageType: file.type,
-        });
+        setValidImage(file);
       } else {
         toast({
           variant: "destructive",

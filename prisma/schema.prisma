@@ -21,7 +21,7 @@ model BlogPost {
   title       String
   content     String
   description String
-  image       String
+  image       Json?
   category    Category? @relation(fields: [categoryId], references: [id])
   categoryId  String?
   createdAt   DateTime  @default(now())

@@ -9,8 +9,6 @@ function TagUpload() {
   const [input, setInput] = useState("");
   const [hashtags, setHashtags] = useState([]);
 
-  console.log("Tags component");
-
   const handleInputChange = useCallback(
     (e) => {
       setInput((prev) => (prev = e.target.value));
@@ -29,13 +27,22 @@ function TagUpload() {
     [input]
   );
 
+  const handleHastgasChange = useCallback(() => {
+    if (hashtags.length == 0) {
+      setTagsValidation("");
+    }
+  }, [hashtags]);
+
   const { setTagsValidation } = useValidationStore();
 
   return (
     <>
       <h1 className="font-semibold">Tags of the post</h1>
       <Input
-        onChange={handleInputChange}
+        onChange={(e) => {
+          handleInputChange(e);
+          handleHastgasChange;
+        }}
         placeholder="For the tag to be applied, the text should start with # and also be at least 2 char long...."
         className={`${
           input !== ""

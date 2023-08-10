@@ -14,7 +14,6 @@ const descValidation = Joi.string()
   .label("Description");
 
 function DescUpload() {
-  console.log("Description component");
   const { setDescValidation } = useValidationStore();
   const [input, setInput] = useState({
     desc: "",
@@ -32,6 +31,7 @@ function DescUpload() {
     (e) => {
       const { error } = descValidation.validate(e.target.value);
       if (error) {
+        setDescValidation("");
         setInput((prev) => ({ ...prev, validDesc: error.details[0].message }));
       } else {
         setInput((prev) => ({ ...prev, validDesc: true }));
