@@ -5,38 +5,69 @@ import { Button } from "@/components/ui/button";
 import ReactQuill from "react-quill";
 import { modules } from "@/lib/react-quill-modules";
 import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useEffect, useState } from "react";
+import { toast, useToast } from "@/components/ui/use-toast";
 import Filter from "bad-words";
+
 import ImageUploader from "@/components/create/ImageUploader";
 import Heading from "@/components/create/Heading";
 import SelectCategory from "@/components/create/SelectCategory";
+import Joi from "joi";
+import { Label } from "@/components/ui/label";
+import TagUpload from "@/components/create/TagUpload";
+import TitleUpload from "@/components/create/TitleUpload";
+import DescUpload from "@/components/create/DescUpload";
 
-export const PostInput = ({ title, placeholder }) => {
-  const filter = new Filter({ replaceRegex: /[A-Za-z]/g, replaceWith: "*" });
-  const [value, setValue] = useState("");
-  if (filter.isProfane(value)) {
-    setValue(filter.clean(value));
-    console.log(value);
-  } else {
-    console.log(value);
-  }
-
-  return (
-    <div className="flex flex-col space-y-1">
-      <h1 className="font-medium">{title}</h1>
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-      />
-    </div>
-  );
-};
+const titleValidation = Joi.string().min(80).max(250).required().label("Title");
+const descriptionValidation = Joi.string()
+  .min(150)
+  .max(300)
+  .required()
+  .label("Title");
 
 function CreatePage() {
   const [value, setValue] = useState("");
+
   const { toast } = useToast();
+  const [input, setInput] = useState({
+    title: "",
+    validTitle: false,
+    description: "",
+    validDescription: "",
+  });
+  useEffect(() => {
+    setInput({
+      ...input,
+      validTitle: false,
+      validDescription: false,
+      validTags: false,
+    });
+  }, []);
+  useEffect(() => {
+    const validate = titleValidation.validate(input.title);
+    const { error } = validate;
+
+    if (input.title !== "") {
+      if (error) {
+        setInput({ ...input, validTitle: error.details[0].message });
+      } else {
+        setInput({ ...input, validTitle: true });
+      }
+    }
+  }, [input.title]);
+
+  useEffect(() => {
+    const validate = descriptionValidation.validate(input.description);
+    const { error } = validate;
+
+    if (input.description !== "") {
+      if (error) {
+        setInput({ ...input, validDescription: error.details[0].message });
+      } else {
+        setInput({ ...input, validDescription: true });
+      }
+    }
+  }, [input.description]);
 
   return (
     <div>
@@ -45,26 +76,14 @@ function CreatePage() {
         <ImageUploader />
       </div>
       <div className="flex flex-col space-y-4">
-        <PostInput
-          title={"Title of the post"}
-          placeholder={
-            "The Art of Mindfulness: Finding Peace in a Chaotic World"
-          }
-        />
-
-        <PostInput
-          title={"Description of the post"}
-          placeholder={
-            "In a world filled with constant distractions and ever-increasing demands, finding inner peace ..."
-          }
-        />
+        <TitleUpload />
+        <div className="flex flex-col space-y-1">
+          <DescUpload />
+        </div>
 
         <div className="flex flex-col md:flex-row w-full items-center justify-between">
           <div className="w-full md:w-[70%] xl:w-[80%] mr-2">
-            <PostInput
-              title={"Tags of the post"}
-              placeholder={"Example: #beauty, #nature, #life"}
-            />
+            <TagUpload />
           </div>
           <div className=" flex flex-col h-full w-full md:w-[30%] xl:w-[20%] mt-3 md:mt-0 ">
             <SelectCategory />

@@ -35,7 +35,6 @@ export default function LoginForm() {
   });
   const { toast } = useToast();
   const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pass, showPass] = useState(false);

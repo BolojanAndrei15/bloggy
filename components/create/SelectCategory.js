@@ -17,8 +17,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { BookmarkPlus } from "lucide-react";
-import { PostInput } from "@/app/(application)/create/page";
+
 import axios from "axios";
+import { Input } from "../ui/input";
 
 function SelectCategory() {
   const { data, isLoading } = useQuery({
@@ -62,9 +63,10 @@ function SelectCategory() {
                   Imagination!
                 </DialogDescription>
               </DialogHeader>
-              <PostInput
-                title={"Name of the new category"}
-                placeholder={"Example: Tech ..."}
+              <h1 className="font-medium">Add new description</h1>
+              <Input
+                className=""
+                placeholder="Example: School or Tech or ..."
               />
               <div className="flex w-full md:justify-end">
                 <Button className="w-full md:w-48 flex justify-between">
