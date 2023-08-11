@@ -62,7 +62,7 @@ function PostPage() {
               </div>
             </div>
           </div>
-          <div>{data.content}</div>
+          <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
         </div>
       )}
     </>
