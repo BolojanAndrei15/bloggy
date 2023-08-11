@@ -13,12 +13,22 @@ const descValidation = Joi.string()
   .trim()
   .label("Description");
 
-function DescUpload() {
+function DescUpload({ data }) {
   const { setDescValidation } = useValidationStore();
   const [input, setInput] = useState({
     desc: "",
     validDesc: false,
   });
+
+  useEffect(() => {
+    if (data) {
+      setInput({
+        desc: data,
+        validDesc: true,
+      });
+      setDescValidation(data);
+    }
+  }, []);
 
   const handleTextChange = useCallback(
     (e) => {

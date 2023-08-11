@@ -8,7 +8,7 @@ import { useToast } from "../ui/use-toast";
 function AddPostButton() {
   const { data: session } = useSession();
   const { toast } = useToast();
-  const { title, desc, tags, category, content, image } = useValidationStore();
+  c;
 
   async function handleSavePost() {
     const postData = {

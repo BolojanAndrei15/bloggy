@@ -2,17 +2,24 @@
 import ReactQuill from "react-quill";
 import { modules } from "@/lib/react-quill-modules";
 import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Joi from "joi"; // Import Joi
 import { Label } from "../ui/label";
 import useValidationStore from "@/lib/validation-store";
 
 const schema = Joi.string().trim().required().min(300).label("Content"); // Define validation schema
 
-function ContentUpload() {
+function ContentUpload({ data }) {
   const { setContentValidation } = useValidationStore();
   const [value, setValue] = useState("");
   const [validationError, setValidationError] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setValue(data);
+      setContentValidation(data);
+    }
+  }, []);
 
   const handleEditorChange = (content) => {
     setValue(content);

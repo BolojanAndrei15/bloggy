@@ -5,9 +5,17 @@ import useValidationStore from "@/lib/validation-store";
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-context-menu";
 
-function TagUpload() {
-  const [input, setInput] = useState("");
-  const [hashtags, setHashtags] = useState([]);
+function TagUpload({ data }) {
+  const [input, setInput] = useState(data ? data.toString() : "");
+  const [hashtags, setHashtags] = useState(data ? data : []);
+
+  useEffect(() => {
+    if (data) {
+      setInput(data.toString());
+      setHashtags(data);
+      setTagsValidation(data);
+    }
+  }, []);
 
   const handleInputChange = useCallback(
     (e) => {
@@ -39,6 +47,7 @@ function TagUpload() {
     <>
       <h1 className="font-semibold">Tags of the post</h1>
       <Input
+        value={input}
         onChange={(e) => {
           handleInputChange(e);
           handleHastgasChange;

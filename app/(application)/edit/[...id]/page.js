@@ -1,3 +1,4 @@
+"use client";
 import AddPostButton from "@/components/create/AddPostButton";
 import ContentUpload from "@/components/create/ContentUpload";
 import DescUpload from "@/components/create/DescUpload";
@@ -6,38 +7,58 @@ import ImageUploader from "@/components/create/ImageUploader";
 import SelectCategory from "@/components/create/SelectCategory";
 import TagUpload from "@/components/create/TagUpload";
 import TitleUpload from "@/components/create/TitleUpload";
+import EditPostButtons from "@/components/edit/EditPostButtons";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useParams, usePathname } from "next/navigation";
 
 function EditPage() {
+  const params = useParams();
+  const [id] = params.id;
+  const { data, isLoading } = useQuery({
+    queryKey: ["editPost"],
+    queryFn: async () => {
+      const res = await axios.post("/api/post", { postId: id });
+      return res.data;
+    },
+  });
+
   return (
-    <div>
-      <div>
-        <Heading
-          title={"Edit post"}
-          desc={
-            "Ready to shape your digital identity? Let's get started. Your online journey awaits your careful curation and attention to detail."
-          }
-        />
-      </div>
-      <div>
-        <ImageUploader />
-        <div className="flex flex-col space-y-3 mt-3">
-          <TitleUpload />
-          <DescUpload />
-          <div className="flex flex-col md:flex-row w-full items-center justify-between">
-            <div className="w-full md:w-[70%] xl:w-[80%] mr-2">
-              <TagUpload />
+    <>
+      {isLoading ? (
+        <ContentUpload />
+      ) : (
+        <div>
+          <div>
+            <Heading
+              title={"Edit post"}
+              desc={
+                "Ready to shape your digital identity? Let's get started. Your online journey awaits your careful curation and attention to detail."
+              }
+            />
+          </div>
+          <div>
+            <ImageUploader data={data.image} />
+            <div className="flex flex-col space-y-3 mt-3">
+              <TitleUpload data={data.title} />
+              <DescUpload data={data.description} />
+              <div className="flex flex-col md:flex-row w-full items-center justify-between">
+                <div className="w-full md:w-[70%] xl:w-[80%] mr-2">
+                  <TagUpload data={data.tags} />
+                </div>
+                <div className=" flex flex-col h-full w-full md:w-[30%] xl:w-[20%] mt-3 md:mt-0 ">
+                  <SelectCategory dataI={data.categoryId} />
+                </div>
+              </div>
             </div>
-            <div className=" flex flex-col h-full w-full md:w-[30%] xl:w-[20%] mt-3 md:mt-0 ">
-              <SelectCategory />
+            <div className="">
+              <ContentUpload data={data.content} />
             </div>
+            <EditPostButtons />
           </div>
         </div>
-        <div className="">
-          <ContentUpload />
-        </div>
-        <AddPostButton />
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

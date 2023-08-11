@@ -1,15 +1,23 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { ImagePlus } from "lucide-react";
 import useValidationStore from "@/lib/validation-store";
 
-const ImageUploader = () => {
-  const { setValidImage, image } = useValidationStore();
+const ImageUploader = ({ data }) => {
+  const { setValidImage } = useValidationStore();
+
   const [selectedImage, setSelectedImage] = useState(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (data) {
+      setSelectedImage(data);
+      setValidImage(data);
+    }
+  }, []);
 
   const handleImageChange = useCallback((file) => {
     const isValidImage = file.type.startsWith("image/");
@@ -21,9 +29,8 @@ const ImageUploader = () => {
         reader.readAsDataURL(file);
         reader.onloadend = () => {
           setValidImage(reader.result);
+          setSelectedImage(reader.result);
         };
-
-        setSelectedImage(() => URL.createObjectURL(file));
       } else {
         toast({
           variant: "destructive",

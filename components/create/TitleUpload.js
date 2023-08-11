@@ -5,7 +5,7 @@ import Joi from "joi";
 import { Label } from "../ui/label";
 import useValidationStore from "@/lib/validation-store";
 
-function TitleUpload() {
+function TitleUpload({ data }) {
   const { setTitleValidation } = useValidationStore();
   const titleValidation = Joi.string()
     .min(50)
@@ -18,6 +18,16 @@ function TitleUpload() {
     title: "",
     validTitle: false,
   });
+
+  useEffect(() => {
+    if (data) {
+      setInput({
+        title: data,
+        validTitle: true,
+      });
+      setTitleValidation(data);
+    }
+  }, []);
 
   const handleTextChange = useCallback(
     (e) => {
