@@ -3,10 +3,11 @@ import useValidationStore from "@/lib/validation-store";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useToast } from "../ui/use-toast";
 
 function AddPostButton() {
   const { data: session } = useSession();
-
+  const { toast } = useToast();
   const { title, desc, tags, category, content, image } = useValidationStore();
 
   async function handleSavePost() {
@@ -21,9 +22,7 @@ function AddPostButton() {
       authorId: session.user.id,
     };
 
-    await axios
-      .post("http://localhost:3000/api/blogpost", postData)
-      .then(() => console.log("worked"));
+    await axios.post("/api/blogpost", postData).then(() => toast);
   }
 
   return (

@@ -17,8 +17,13 @@ const ImageUploader = () => {
       const maxFileSize = 2 * 1024 * 1024;
       const isValidSize = file && file.size <= maxFileSize;
       if (isValidSize) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setValidImage(reader.result);
+        };
+
         setSelectedImage(() => URL.createObjectURL(file));
-        setValidImage(file);
       } else {
         toast({
           variant: "destructive",

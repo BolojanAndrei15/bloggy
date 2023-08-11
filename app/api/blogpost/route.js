@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+
 import Joi from "joi";
 import { NextResponse } from "next/server";
+
+import { v2 as cloudinary } from "cloudinary";
 
 const prisma = new PrismaClient();
 
@@ -40,7 +43,7 @@ export async function POST(req, res) {
     title: Joi.string().required(),
     content: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.object().optional(),
+    image: Joi.string().required(),
     categoryId: Joi.string().optional(),
     authorName: Joi.string().optional(),
     authorId: Joi.string().required(),
@@ -72,6 +75,21 @@ export async function POST(req, res) {
   if (error) {
     return new NextResponse("Validation error", { status: 404 });
   }
+
+  cloudinary.config({
+    cloud_name: "dilg94lwi",
+    api_key: "754459318497952",
+    api_secret: "ZQtgWLUIjoYCRr7eLcl9KgKa6s8",
+  });
+
+  cloudinary.uploader.upload(
+    image,
+    { public_id: authorId },
+    function (error, result) {
+      console.log(result);
+    }
+  );
+
   const createPost = await prisma.blogPost.create({
     data: {
       title,
