@@ -2,9 +2,26 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import useValidationStore from "@/lib/validation-store";
+import axios from "axios";
+import { useParams } from "next/navigation";
 
 function EditPostButtons() {
+  const params = useParams();
+  const [id] = params;
+
   const { title, desc, tags, category, content, image } = useValidationStore();
+
+  const handleEdit = async () => {
+    const res = axios.post("", {
+      id,
+      title,
+      desc,
+      tags,
+      categoryId: category,
+      content,
+      image,
+    });
+  };
 
   console.log(category);
   return (
