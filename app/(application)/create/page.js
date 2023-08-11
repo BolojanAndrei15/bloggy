@@ -7,13 +7,16 @@ import SelectCategory from "@/components/create/SelectCategory";
 import TagUpload from "@/components/create/TagUpload";
 import TitleUpload from "@/components/create/TitleUpload";
 
-import useValidationStore from "@/lib/validation-store";
-
 function CreatePage() {
   return (
     <div>
       <div>
-        <Heading />
+        <Heading
+          title={"Create post"}
+          desc={
+            "Welcome to our Create Blogpost Page - Unleash Your Creativity and Share Your Voice!"
+          }
+        />
       </div>
       <div>
         <ImageUploader />
