@@ -16,6 +16,8 @@ function EditPostButtons() {
   const { title, desc, tags, category, content, image } = useValidationStore();
   const { toast } = useToast();
 
+  console.log(tags);
+
   const handleEdit = async () => {
     const res = await axios
       .post("/api/blogpost/edit", {

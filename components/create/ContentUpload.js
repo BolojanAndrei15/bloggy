@@ -15,6 +15,7 @@ function ContentUpload({ data }) {
   const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
+    setContentValidation("");
     if (data) {
       setValue(data);
       setContentValidation(data);

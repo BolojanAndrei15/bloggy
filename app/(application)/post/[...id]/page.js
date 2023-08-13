@@ -18,15 +18,18 @@ import { PenSquare, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 function PostPage() {
   const { data: session, status } = useSession();
   const params = useParams();
   const [id] = params.id;
-
+  const { toast } = useToast();
   const [userPost, setUserPost] = useState(null);
+  const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["post"],
@@ -51,7 +54,23 @@ function PostPage() {
     } else if (status === "unauthenticated") {
     }
   }, [status, isLoading]);
-
+  const handleDelete = async () => {
+    await axios.post("/api/blogpost/delete", { postId: id }).then(() => {
+      toast({
+        title: `Post was deleted succesfully`,
+        description: "What are you waiting, go now and write a new one",
+        action: (
+          <ToastAction
+            onClick={() => router.push("/create")}
+            altText="Try again"
+          >
+            Create now
+          </ToastAction>
+        ),
+      });
+      router.push("/");
+    });
+  };
   return (
     <>
       {isLoading ? (
@@ -109,7 +128,12 @@ function PostPage() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <Button onClick={() => {}} variant={"destructive"}>
+                        <Button
+                          onClick={() => {
+                            handleDelete();
+                          }}
+                          variant={"destructive"}
+                        >
                           <Trash />
                         </Button>
                       </TooltipTrigger>

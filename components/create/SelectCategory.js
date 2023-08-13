@@ -22,6 +22,10 @@ function SelectCategory({ dataI }) {
     },
   });
 
+  useEffect(() => {
+    setCategoryValid("");
+  }, []);
+
   return (
     <>
       <h1 className="font-semibold ">Category of the post</h1>

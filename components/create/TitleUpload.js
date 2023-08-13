@@ -20,6 +20,7 @@ function TitleUpload({ data }) {
   });
 
   useEffect(() => {
+    setTitleValidation("");
     if (data) {
       setInput({
         title: data,

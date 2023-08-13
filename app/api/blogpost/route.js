@@ -43,9 +43,9 @@ export async function POST(req, res) {
     description: Joi.string().required(),
     image: Joi.string().required(),
     categoryId: Joi.string().optional(),
+    tags: Joi.array().items(Joi.string().max(20)).optional(),
     authorName: Joi.string().optional(),
     authorId: Joi.string().required(),
-    tags: Joi.array().items(Joi.string()).required(),
   });
 
   if (req.method !== "POST") {
@@ -69,6 +69,8 @@ export async function POST(req, res) {
   } = body;
 
   const { error } = blogPostSchema.validate(body);
+  console.log(req.body);
+  console.log(error);
 
   if (error) {
     return new NextResponse("Validation error", { status: 404 });

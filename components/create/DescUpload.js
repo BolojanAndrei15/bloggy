@@ -21,6 +21,8 @@ function DescUpload({ data }) {
   });
 
   useEffect(() => {
+    setDescValidation("");
+
     if (data) {
       setInput({
         desc: data,

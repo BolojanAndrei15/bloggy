@@ -3,68 +3,59 @@
 import { useCallback, useEffect, useState } from "react";
 import useValidationStore from "@/lib/validation-store";
 import { Input } from "../ui/input";
-import { Label } from "@radix-ui/react-context-menu";
+import { Label } from "../ui/label";
 
 function TagUpload({ data }) {
-  const [input, setInput] = useState(data ? data.toString() : "");
-  const [hashtags, setHashtags] = useState(data ? data : []);
+  const [input, setInput] = useState(data ? data.join("") : "");
+  const [tags, setTags] = useState(data ? data : []);
+  const { setTagsValidation } = useValidationStore();
 
   useEffect(() => {
+    setTagsValidation("");
+
     if (data) {
-      setInput(data.toString());
-      setHashtags(data);
+      setInput(data.join(" "));
+      setTags(data);
       setTagsValidation(data);
     }
   }, []);
 
-  const handleInputChange = useCallback(
-    (e) => {
-      setInput((prev) => (prev = e.target.value));
+  const validateInput = (text) => {
+    const words = text.split(/[\s,]+/);
+    const invalidWords = words.filter(
+      (word) =>
+        word.length < 2 || word.length > 25 || !/^[a-zA-Z0-9_-]+$/.test(word)
+    );
+    return invalidWords.length === 0;
+  };
 
-      const extractHashtags = (text) => {
-        const regex = /(?<=\s|^)(#[a-zA-Z0-9_]{2,})(?=\s|$)/g;
-        const matches = text.match(regex);
+  const handleInputChange = useCallback((e) => {
+    const newText = e.target.value;
+    setInput(newText);
 
-        return matches ? matches.map((match) => match.slice(1)) : [];
-      };
+    const extractedTags = validateInput(newText) ? newText.split(/[\s,]+/) : [];
 
-      const extractedHashtags = extractHashtags(input);
-      setTagsValidation(extractedHashtags);
-      setHashtags(extractedHashtags);
-    },
-    [input]
-  );
-
-  const handleHastgasChange = useCallback(() => {
-    if (hashtags.length == 0) {
-      setTagsValidation("");
-    }
-  }, [hashtags]);
-
-  const { setTagsValidation } = useValidationStore();
+    setTagsValidation(extractedTags);
+    setTags(extractedTags);
+  }, []);
 
   return (
     <>
       <h1 className="font-semibold">Tags of the post</h1>
       <Input
         value={input}
-        onChange={(e) => {
-          handleInputChange(e);
-          handleHastgasChange;
-        }}
-        placeholder="For the tag to be applied, the text should start with # and also be at least 2 char long...."
+        onChange={(e) => handleInputChange(e)}
+        placeholder="Use words separated by commas or spaces, at least 2 characters long..."
         className={`${
-          input !== ""
-            ? hashtags.length == 0
-              ? "border-red-500"
-              : "border-green-500"
-            : ""
+          input !== "" && !validateInput(input)
+            ? "border-red-500"
+            : "border-green-500"
         }`}
       />
-      {hashtags.length == 0 && input !== "" ? (
+      {!validateInput(input) && input !== "" ? (
         <Label className="text-sm font-medium text-red-500">
-          For the tag to be consider valid, it should start with '#' like
-          '#accounting' and also be at least 2 char long
+          Tags should be 2 to 20 characters long and may contain letters,
+          numbers, underscores, hyphens, and no spaces.
         </Label>
       ) : (
         ""
