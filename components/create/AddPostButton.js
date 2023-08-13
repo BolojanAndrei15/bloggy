@@ -4,11 +4,14 @@ import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 function AddPostButton() {
+  const router = useRouter();
   const { data: session } = useSession();
   const { toast } = useToast();
-  c;
+
+  const { title, desc, tags, category, content, image } = useValidationStore();
 
   async function handleSavePost() {
     const postData = {
@@ -22,7 +25,13 @@ function AddPostButton() {
       authorId: session.user.id,
     };
 
-    await axios.post("/api/blogpost", postData).then(() => toast);
+    await axios.post("/api/blogpost", postData).then(() =>
+      toast({
+        title: "Post was created succesfully",
+        description: `Thank you for sharing your toughts with us, ${session.user.name}`,
+      })
+    );
+    router.push(`/`);
   }
 
   return (

@@ -3,8 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
-import { v2 as cloudinary } from "cloudinary";
-
 const prisma = new PrismaClient();
 
 export async function GET(req, res) {
@@ -98,61 +96,4 @@ export async function POST(req, res) {
   }
 
   return NextResponse.json(createPost);
-}
-
-export async function PATCH(req) {
-  if (req.method !== "PATCH") {
-    return new NextResponse("Method not allowed", { status: 405 });
-  }
-
-  const body = await req.json();
-
-  if (!body) {
-    return new NextResponse("Body should not be empty", { status: 404 });
-  }
-
-  const { id, title, description, categoryId, tags, content, image } = body;
-
-  const editPost = prisma.blogPost.update({
-    where: { id },
-    data: {
-      title,
-      description,
-      category: {
-        connect: { id: categoryId },
-      },
-      tags,
-      content,
-      image,
-    },
-  });
-
-  if (!editPost) {
-    return new NextResponse("Something went wrong", { status: 400 });
-  }
-
-  return NextResponse.json(editPost);
-}
-
-export async function DEETE(req) {
-  if (req.method !== "DELETE") {
-    return new NextResponse("Method not allowed", { status: 405 });
-  }
-
-  const body = await req.json();
-
-  if (!body) {
-    return new NextResponse("Body should not be empty", { status: 404 });
-  }
-  const { id } = body;
-
-  const deletePost = prisma.blogPost.delete({
-    where: { id },
-  });
-
-  if (!deletePost) {
-    return new NextResponse("Something went wrong", { status: 400 });
-  }
-
-  return NextResponse.json(deletePost);
 }

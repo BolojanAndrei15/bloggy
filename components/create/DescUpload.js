@@ -7,7 +7,7 @@ import { Label } from "../ui/label";
 import useValidationStore from "@/lib/validation-store";
 
 const descValidation = Joi.string()
-  .min(150)
+  .min(100)
   .max(400)
   .required()
   .trim()

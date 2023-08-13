@@ -1,5 +1,5 @@
 "use client";
-import AddPostButton from "@/components/create/AddPostButton";
+import Error from "next/error";
 import ContentUpload from "@/components/create/ContentUpload";
 import DescUpload from "@/components/create/DescUpload";
 import Heading from "@/components/create/Heading";
@@ -8,14 +8,15 @@ import SelectCategory from "@/components/create/SelectCategory";
 import TagUpload from "@/components/create/TagUpload";
 import TitleUpload from "@/components/create/TitleUpload";
 import EditPostButtons from "@/components/edit/EditPostButtons";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
+import ContentLoader from "@/components/main-page/ContentLoader";
 
 function EditPage() {
   const params = useParams();
   const [id] = params.id;
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["editPost"],
     queryFn: async () => {
       const res = await axios.post("/api/post", { postId: id });
@@ -26,7 +27,9 @@ function EditPage() {
   return (
     <>
       {isLoading ? (
-        <ContentUpload />
+        <ContentLoader />
+      ) : isError ? (
+        <Error statusCode={404} />
       ) : (
         <div>
           <div>

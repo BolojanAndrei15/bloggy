@@ -2,14 +2,16 @@
 import ContentLoader from "@/components/post/ContentLoader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function PostPage() {
   const params = useParams();
-
   const [id] = params.id;
 
   const { data, isLoading, isError } = useQuery({
