@@ -1,18 +1,32 @@
 "use client";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import ContentLoader from "@/components/post/ContentLoader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { PenSquare, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function PostPage() {
+  const { data: session, status } = useSession();
   const params = useParams();
   const [id] = params.id;
+
+  const [userPost, setUserPost] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["post"],
@@ -20,9 +34,23 @@ function PostPage() {
       const res = await axios.post("/api/post", {
         postId: id,
       });
+
       return res.data;
     },
   });
+
+  useEffect(() => {
+    if (isLoading) {
+    } else if (status === "loading") {
+    } else if (status === "authenticated") {
+      if (data.authorId == session.user.id) {
+        setUserPost(true);
+      } else {
+        setUserPost(false);
+      }
+    } else if (status === "unauthenticated") {
+    }
+  }, [status, isLoading]);
 
   return (
     <>
@@ -62,6 +90,38 @@ function PostPage() {
                   Created: {data.createdAt}
                 </p>
               </div>
+              {userPost == true ? (
+                <div className="flex space-x-3 pl-3">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Link href={`/edit/${id}`}>
+                          <Button variant={"outline"}>
+                            <PenSquare />
+                          </Button>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Edit post</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button onClick={() => {}} variant={"destructive"}>
+                          <Trash />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-red-500 text-white">
+                        <p>Delete post</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
