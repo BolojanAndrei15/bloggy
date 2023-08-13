@@ -6,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import useValidationStore from "@/lib/validation-store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -34,13 +36,15 @@ function SelectCategory({ dataI }) {
           <SelectValue placeholder={"No selected Category"} />
         </SelectTrigger>
         <SelectContent>
-          {isLoading
-            ? "Categories are loading..."
-            : data.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
+          <ScrollArea className="h-[200px]  rounded-md  p-4">
+            {isLoading
+              ? "Categories are loading..."
+              : data.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+          </ScrollArea>
         </SelectContent>
       </Select>
     </>

@@ -25,13 +25,23 @@ function AddPostButton() {
       authorId: session.user.id,
     };
 
-    await axios.post("/api/blogpost", postData).then(() =>
-      toast({
-        title: "Post was created succesfully",
-        description: `Thank you for sharing your toughts with us, ${session.user.name}`,
+    await axios
+      .post("/api/blogpost", postData)
+      .then(() => {
+        toast({
+          title: "Post was created succesfully",
+          description: `Thank you for sharing your toughts with us, ${session.user.name}`,
+        });
+        router.push(`/`);
       })
-    );
-    router.push(`/`);
+      .catch((err) => {
+        console.log(err);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: `There was a problem with your request, ${err.response.data}`,
+        });
+      });
   }
 
   return (

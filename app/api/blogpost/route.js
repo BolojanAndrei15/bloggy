@@ -54,7 +54,9 @@ export async function POST(req, res) {
   const body = await req.json();
 
   if (!body) {
-    return new NextResponse("Body should not be empty", { status: 404 });
+    return new NextResponse("Inputs should not be empty", {
+      status: 404,
+    });
   }
 
   const {
@@ -73,7 +75,9 @@ export async function POST(req, res) {
   console.log(error);
 
   if (error) {
-    return new NextResponse("Validation error", { status: 404 });
+    return new NextResponse(error, {
+      status: 404,
+    });
   }
 
   const createPost = await prisma.blogPost.create({

@@ -47,9 +47,11 @@ function TagUpload({ data }) {
         onChange={(e) => handleInputChange(e)}
         placeholder="Use words separated by commas or spaces, at least 2 characters long..."
         className={`${
-          input !== "" && !validateInput(input)
-            ? "border-red-500"
-            : "border-green-500"
+          input !== ""
+            ? !validateInput(input)
+              ? "border-red-500"
+              : "border-green-500"
+            : ""
         }`}
       />
       {!validateInput(input) && input !== "" ? (
