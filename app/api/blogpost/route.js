@@ -12,25 +12,22 @@ export async function GET(req, res) {
 
   const posts = await prisma.blogPost.findMany();
 
-  function getTimeDifference(createdAtDate, currentDate) {
-    const timeDifferenceInMinutes = Math.round(
-      (currentDate - createdAtDate) / (1000 * 60)
-    );
-
-    if (timeDifferenceInMinutes < 1) {
-      return "just now";
-    } else if (timeDifferenceInMinutes >= 60) {
-      const timeDifferenceInHours = Math.floor(timeDifferenceInMinutes / 60);
-      return `${timeDifferenceInHours} hours ago`;
-    } else {
-      return `${timeDifferenceInMinutes} minutes ago`;
-    }
+  function formatDateTime(date) {
+    const options = {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+    return date.toLocaleDateString("en-US", options);
   }
-  const currentDate = new Date();
+
   posts.forEach((post) => {
     const createdAtDate = new Date(post.createdAt);
-    const timeDifferenceString = getTimeDifference(createdAtDate, currentDate);
-    post.createdAt = timeDifferenceString;
+    const formattedDateTime = formatDateTime(createdAtDate);
+    post.createdAt = `Created at: ${formattedDateTime}`;
   });
 
   return NextResponse.json(posts, { status: 200 });

@@ -21,29 +21,23 @@ export async function POST(req, res) {
   if (!post) {
     return new NextResponse("Post not found", { status: 404 });
   }
+  function formatDateTime(date) {
+    const options = {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+    return date.toLocaleDateString("en-US", options);
+  }
 
   const createdAtDate = new Date(post.createdAt);
-  const currentDate = new Date();
-  const timeDifferenceInMinutes = Math.round(
-    (currentDate - createdAtDate) / (1000 * 60)
-  );
+  const formattedDateTime = formatDateTime(createdAtDate);
 
-  if (timeDifferenceInMinutes < 1) {
-    return NextResponse.json({
-      ...post,
-      createdAt: `Just now`,
-    });
-  } else if (timeDifferenceInMinutes >= 60) {
-    // Calculate the time difference in hours
-    const timeDifferenceInHours = Math.floor(timeDifferenceInMinutes / 60);
-    return NextResponse.json({
-      ...post,
-      createdAt: `${timeDifferenceInHours} hours ago`,
-    });
-  } else {
-    return NextResponse.json({
-      ...post,
-      createdAt: `${timeDifferenceInMinutes} minutes ago`,
-    });
-  }
+  return NextResponse.json({
+    ...post,
+    createdAt: ` ${formattedDateTime}`,
+  });
 }
