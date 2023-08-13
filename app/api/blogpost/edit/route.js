@@ -17,23 +17,26 @@ export async function POST(req) {
 
   const { postId, title, description, categoryId, tags, content, image } = body;
 
-  const editPost = await prisma.blogPost.update({
-    where: { id: postId },
-    data: {
-      title,
-      description,
-      category: {
-        connect: { id: categoryId },
+  try {
+    const editPost = await prisma.blogPost.update({
+      where: { id: postId },
+      data: {
+        title,
+        description,
+        category: {
+          connect: { id: categoryId },
+        },
+        tags,
+        content,
+        image,
       },
-      tags,
-      content,
-      image,
-    },
-  });
+    });
 
-  if (!editPost) {
-    return new NextResponse("Something went wrong", { status: 400 });
+    return NextResponse.json(editPost);
+  } catch (error) {
+    return new NextResponse(
+      "Something went wrong when tring to update the blogpost, verify if every input has a value",
+      { status: 404 }
+    );
   }
-
-  return NextResponse.json(editPost);
 }

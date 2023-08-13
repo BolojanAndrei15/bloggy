@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 function BlogPost({ id, title, desc, createdAt, tags, img }) {
+  const tag = tags.slice(0, 3);
+
   return (
     <div>
       <Link
@@ -27,8 +29,8 @@ function BlogPost({ id, title, desc, createdAt, tags, img }) {
         </div>
         <div className="flex justify-end mt-3">
           <div className="w-full flex">
-            <div className="flex space-x-2">
-              {tags.map((tag) => (
+            <div className="flex space-x-2 ">
+              {tag.map((tag) => (
                 <Badge key={tag} variant="outline">
                   {tag}
                 </Badge>

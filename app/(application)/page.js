@@ -17,6 +17,13 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <Heading />
+      {isLoading ? (
+        " "
+      ) : data.length == 0 ? (
+        <h1 className="w-full text-center text-gray-400">No posts</h1>
+      ) : (
+        ""
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-5 lg:grid-cols-3">
         {isLoading ? (
           <LoadingPage />

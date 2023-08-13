@@ -35,7 +35,6 @@ function AddPostButton() {
         router.push(`/`);
       })
       .catch((err) => {
-        console.log(err);
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",

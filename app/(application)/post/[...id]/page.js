@@ -1,5 +1,5 @@
 "use client";
-
+import { v4 as uuidv4 } from "uuid";
 import {
   Tooltip,
   TooltipContent,
@@ -53,7 +53,8 @@ function PostPage() {
       }
     } else if (status === "unauthenticated") {
     }
-  }, [status, isLoading]);
+  }, [status, isLoading, data, session]);
+
   const handleDelete = async () => {
     await axios.post("/api/blogpost/delete", { postId: id }).then(() => {
       toast({
@@ -90,32 +91,37 @@ function PostPage() {
               </h2>
             </div>
             <div className="w-full flex justify-start">
-              <div className="flex space-x-2">
-                {data.tags.map((tag) => (
-                  <Badge key={tag} className="text-[10px] md:text-sm">
+              <div className="grid grid-flow-row  grid-cols-3 sm:grid-cols-4 gap-2 lg:flex lg:space-x-2">
+                {data.tags.slice(0, 9).map((tag) => (
+                  <Badge
+                    key={uuidv4()}
+                    className="text-[10px] sm:text-sm flex justify-center md:text-sm "
+                  >
                     {tag}
                   </Badge>
                 ))}
               </div>
             </div>
-            <div className="flex items-center space-x-2 mt-5">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="font-bold text-sm">{data.authorName}</h1>
-                <p className="font-semibold bold text-sm ">
-                  Created: {data.createdAt}
-                </p>
+            <div className="flex md:flex-row flex-col mt-5 space-y-3">
+              <div className="flex space-x-2 w-[50%] items-center">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h1 className="font-bold text-sm">{data.authorName}</h1>
+                  <p className="font-semibold bold text-sm ">
+                    Created: {data.createdAt}
+                  </p>
+                </div>
               </div>
               {userPost == true ? (
-                <div className="flex space-x-3 pl-3">
+                <div className="flex space-x-3 pl-3 w-full justify-between lg:justify-end">
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger>
+                      <TooltipTrigger className="w-full lg:w-20">
                         <Link href={`/edit/${id}`}>
-                          <Button variant={"outline"}>
+                          <Button className="w-full" variant={"outline"}>
                             <PenSquare />
                           </Button>
                         </Link>
@@ -127,8 +133,9 @@ function PostPage() {
                   </TooltipProvider>
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger>
+                      <TooltipTrigger className="w-full lg:w-20">
                         <Button
+                          className="w-full"
                           onClick={() => {
                             handleDelete();
                           }}

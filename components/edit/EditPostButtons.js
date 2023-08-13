@@ -16,8 +16,6 @@ function EditPostButtons() {
   const { title, desc, tags, category, content, image } = useValidationStore();
   const { toast } = useToast();
 
-  console.log(tags);
-
   const handleEdit = async () => {
     const res = await axios
       .post("/api/blogpost/edit", {
@@ -36,6 +34,14 @@ function EditPostButtons() {
             "🚀 Embrace Change, Embrace You! Discover the Power of Possibilities, Where Every Edit is a Step Towards Your Unique Journey of Growth. 🌱✨",
         });
         router.push(`/post/${id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: ` ${err.response.data}`,
+        });
       });
   };
 

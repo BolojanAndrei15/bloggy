@@ -13,12 +13,11 @@ const ImageUploader = ({ data }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    setValidImage("");
     if (data) {
       setSelectedImage(data);
       setValidImage(data);
     }
-  }, []);
+  }, [data]);
 
   const handleImageChange = useCallback((file) => {
     const isValidImage = file.type.startsWith("image/");
