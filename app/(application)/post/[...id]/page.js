@@ -24,6 +24,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
 function PostPage() {
+  const [category, setCategory] = useState("");
   const { data: session, status } = useSession();
   const params = useParams();
   const [id] = params.id;
@@ -41,6 +42,17 @@ function PostPage() {
       return res.data;
     },
   });
+
+  useEffect(() => {
+    axios
+      .get("/api/category")
+      .then((response) => {
+        setCategory(response.data);
+      })
+      .catch((error) => {
+        console.error("Error making GET request:", error);
+      });
+  }, []);
 
   useEffect(() => {
     if (isLoading) {
@@ -87,8 +99,9 @@ function PostPage() {
             <div className="mt-2 flex flex-col space-y-2 mb-2">
               <div>
                 <h1 className="text-2xl font-bold">{data.title}</h1>
+
                 {data.createdAt !== data.updatedAt && (
-                  <p className="text-sm font-semibold text-gray-500">
+                  <p className="text-[12px] font-semibold text-gray-500">
                     Last edited:{" "}
                     {new Date(data.updatedAt).toLocaleString("en-US", {
                       month: "short",
@@ -99,6 +112,14 @@ function PostPage() {
                   </p>
                 )}
               </div>
+              {category && (
+                <p className="text-md font-semibold text-gray-800">
+                  Category:{" "}
+                  {category.find((cat) => cat.id === data.categoryId)?.name ||
+                    "Unknown Category"}
+                </p>
+              )}
+
               <h2 className="text-md font-semibold text-slate-800">
                 {data.description}
               </h2>
