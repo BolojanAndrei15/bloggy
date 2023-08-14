@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import axios from "axios";
+import { motion } from "framer-motion";
+
+const item = {
+  hidden: { x: -40, opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1,
+  },
+};
 
 function BlogPost({
   id,
@@ -51,7 +60,7 @@ function BlogPost({
     : "Unknown Category";
 
   return (
-    <div>
+    <motion.div variants={item}>
       <Link
         href={`/post/${id}`}
         className="flex flex-col justify-between h-full"
@@ -97,7 +106,7 @@ function BlogPost({
           )}
         </div>
       </Link>
-    </div>
+    </motion.div>
   );
 }
 

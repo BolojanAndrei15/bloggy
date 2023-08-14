@@ -1,3 +1,5 @@
+"use client";
+
 import AddPostButton from "@/components/create/AddPostButton";
 import ContentUpload from "@/components/create/ContentUpload";
 import DescUpload from "@/components/create/DescUpload";
@@ -7,9 +9,15 @@ import SelectCategory from "@/components/create/SelectCategory";
 import TagUpload from "@/components/create/TagUpload";
 import TitleUpload from "@/components/create/TitleUpload";
 
+import { motion } from "framer-motion";
+
 function CreatePage() {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <div>
         <Heading
           title={"Create post"}
@@ -37,7 +45,7 @@ function CreatePage() {
         </div>
         <AddPostButton />
       </div>
-    </div>
+    </motion.div>
   );
 }
 

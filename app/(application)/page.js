@@ -4,6 +4,7 @@ import Heading from "@/components/main-page/Heading";
 import LoadingPage from "@/components/main-page/LoadingPage";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -14,8 +15,24 @@ export default function Home() {
     },
   });
 
+  const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 1,
+      },
+    },
+  };
+
   return (
-    <div className="flex flex-col">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <Heading />
       {isLoading ? (
         " "
@@ -29,20 +46,22 @@ export default function Home() {
           <LoadingPage />
         ) : (
           data.map((post) => (
-            <BlogPost
-              key={post.id}
-              id={post.id}
-              img={post.image}
-              title={post.title}
-              desc={post.description}
-              createdAt={post.createdAt}
-              tags={post.tags.map((tag) => tag)}
-              updatedAt={post.updatedAt}
-              categoryId={post.ca}
-            />
+            <motion.div initial="hidden" animate="visible" variants={container}>
+              <BlogPost
+                key={post.id}
+                id={post.id}
+                img={post.image}
+                title={post.title}
+                desc={post.description}
+                createdAt={post.createdAt}
+                tags={post.tags.map((tag) => tag)}
+                updatedAt={post.updatedAt}
+                categoryId={post.ca}
+              />
+            </motion.div>
           ))
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

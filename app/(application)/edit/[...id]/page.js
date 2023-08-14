@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import ContentLoader from "@/components/post/ContentLoader";
+import { motion } from "framer-motion";
 
 function EditPage() {
   const params = useParams();
@@ -25,7 +26,11 @@ function EditPage() {
   });
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       {isLoading ? (
         <ContentLoader />
       ) : isError ? (
@@ -61,7 +66,7 @@ function EditPage() {
           </div>
         </div>
       )}
-    </>
+    </motion.div>
   );
 }
 

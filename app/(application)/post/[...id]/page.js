@@ -19,9 +19,31 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+
+import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+
+const container = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.2,
+      staggerChildren: 0.3,
+    },
+  },
+};
+const item = {
+  hidden: { y: -20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+  },
+};
 
 function PostPage() {
   const [category, setCategory] = useState("");
@@ -85,23 +107,32 @@ function PostPage() {
     });
   };
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       {isLoading ? (
         <ContentLoader />
       ) : isError ? (
         <Error statusCode={404} />
       ) : (
-        <div>
+        <motion.div variants={container} initial="hidden" animate="visible">
           <div className="flex flex-col mb-10">
-            <div>
+            <motion.div variants={item}>
               <img className="object-cover h-[30rem] w-full" src={data.image} />
-            </div>
+            </motion.div>
             <div className="mt-2 flex flex-col space-y-2 mb-2">
               <div>
-                <h1 className="text-2xl font-bold">{data.title}</h1>
+                <motion.h1 variants={item} className="text-2xl font-bold">
+                  {data.title}
+                </motion.h1>
 
                 {data.createdAt !== data.updatedAt && (
-                  <p className="text-[12px] font-semibold text-gray-500">
+                  <motion.p
+                    variants={item}
+                    className="text-[12px] font-semibold text-gray-500"
+                  >
                     Last edited:{" "}
                     {new Date(data.updatedAt).toLocaleString("en-US", {
                       month: "short",
@@ -109,23 +140,32 @@ function PostPage() {
                       hour: "numeric",
                       minute: "2-digit",
                     })}
-                  </p>
+                  </motion.p>
                 )}
               </div>
               {category && (
-                <p className="text-md font-semibold text-gray-800">
-                  Category:{" "}
+                <motion.div
+                  variants={item}
+                  className="text-md flex items-center  font-semibold text-gray-800"
+                >
+                  <motion.p className="mr-1">Category:</motion.p>{" "}
                   {category.find((cat) => cat.id === data.categoryId)?.name ||
                     "Unknown Category"}
-                </p>
+                </motion.div>
               )}
 
-              <h2 className="text-md font-semibold text-slate-800">
+              <motion.h2
+                variants={item}
+                className="text-md font-semibold text-slate-800"
+              >
                 {data.description}
-              </h2>
+              </motion.h2>
             </div>
             <div className="w-full flex justify-start">
-              <div className="grid grid-flow-row  grid-cols-3 sm:grid-cols-4 gap-2 lg:flex lg:space-x-2">
+              <motion.div
+                variants={item}
+                className="grid grid-flow-row  grid-cols-3 sm:grid-cols-4 gap-2 lg:flex lg:space-x-2"
+              >
                 {data.tags.slice(0, 9).map((tag) => (
                   <Badge
                     key={uuidv4()}
@@ -134,9 +174,12 @@ function PostPage() {
                     {tag}
                   </Badge>
                 ))}
-              </div>
+              </motion.div>
             </div>
-            <div className="flex md:flex-row flex-col mt-5 space-y-3">
+            <motion.div
+              variants={item}
+              className="flex md:flex-row flex-col mt-5 space-y-3"
+            >
               <div className="flex space-x-2 w-[50%] items-center">
                 <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" />
@@ -187,12 +230,15 @@ function PostPage() {
               ) : (
                 ""
               )}
-            </div>
+            </motion.div>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
-        </div>
+          <motion.div
+            variants={item}
+            dangerouslySetInnerHTML={{ __html: data.content }}
+          ></motion.div>
+        </motion.div>
       )}
-    </>
+    </motion.div>
   );
 }
 
