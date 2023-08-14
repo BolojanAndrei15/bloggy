@@ -38,7 +38,7 @@ export default function Home() {
               createdAt={post.createdAt}
               tags={post.tags.map((tag) => tag)}
               updatedAt={post.updatedAt}
-              categoryId={post.categoryId}
+              categoryId={post.ca}
             />
           ))
         )}
