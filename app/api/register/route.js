@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
+
 import { NextResponse } from "next/server";
 import Joi from "joi";
-
-const prisma = new PrismaClient();
+import { prisma } from "../prismaClient";
 
 const userSchema = Joi.object({
   username: Joi.string().min(6).max(12).required(),

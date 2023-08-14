@@ -1,9 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-
 import Joi from "joi";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import { prisma } from "../prismaClient";
 
 export async function GET(req, res) {
   if (req.method !== "GET") {

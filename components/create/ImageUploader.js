@@ -13,6 +13,9 @@ const ImageUploader = ({ data }) => {
   const { toast } = useToast();
 
   useEffect(() => {
+    setSelectedImage(null);
+    setValidImage("");
+
     if (data) {
       setSelectedImage(data);
       setValidImage(data);

@@ -2,17 +2,15 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+
 import Joi from "joi";
-import { NextResponse } from "next/server";
+import { prisma } from "../../prismaClient";
 
 const userSchema = Joi.object({
   username: Joi.string().min(6).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
 });
-
-const prisma = new PrismaClient();
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
