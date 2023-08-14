@@ -26,7 +26,10 @@ export async function GET(req, res) {
 
   posts.forEach((post) => {
     const createdAtDate = new Date(post.createdAt);
+    const updatedAtDate = new Date(post.updatedAt);
+    const formattedUpdateTime = formatDateTime(updatedAtDate);
     const formattedDateTime = formatDateTime(createdAtDate);
+    post.updatedAt = `Last edited: ${formattedUpdateTime}`;
     post.createdAt = `Created at: ${formattedDateTime}`;
   });
 

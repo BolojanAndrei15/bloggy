@@ -37,6 +37,7 @@ export default function Home() {
               desc={post.description}
               createdAt={post.createdAt}
               tags={post.tags.map((tag) => tag)}
+              updatedAt={post.updatedAt}
             />
           ))
         )}

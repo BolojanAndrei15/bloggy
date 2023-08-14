@@ -11,7 +11,7 @@ import EditPostButtons from "@/components/edit/EditPostButtons";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import ContentLoader from "@/components/main-page/ContentLoader";
+import ContentLoader from "@/components/post/ContentLoader";
 
 function EditPage() {
   const params = useParams();
