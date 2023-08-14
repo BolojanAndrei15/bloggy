@@ -1,8 +1,18 @@
-"use client";
+import React, { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import axios from "axios";
 
-function BlogPost({ id, title, desc, createdAt, tags, img, updatedAt }) {
+function BlogPost({
+  id,
+  title,
+  desc,
+  createdAt,
+  tags,
+  img,
+  updatedAt,
+  categoryId,
+}) {
   const tag = tags.slice(0, 3);
 
   function formatDateTime(date) {
@@ -16,11 +26,29 @@ function BlogPost({ id, title, desc, createdAt, tags, img, updatedAt }) {
     };
     return date.toLocaleDateString("en-US", options);
   }
+
   const creationDate = new Date(createdAt);
   const updateDate = new Date(updatedAt);
 
   const formattedCreationDate = formatDateTime(creationDate);
   const formattedUpdateDate = formatDateTime(updateDate);
+
+  const [category, setCategory] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("/api/category")
+      .then((response) => {
+        setCategory(response.data);
+      })
+      .catch((error) => {
+        console.error("Error making GET request:", error);
+      });
+  }, []);
+
+  const categoryName = category
+    ? category.find((cat) => cat.id === categoryId)?.name
+    : "Unknown Category";
 
   return (
     <div>
@@ -40,9 +68,13 @@ function BlogPost({ id, title, desc, createdAt, tags, img, updatedAt }) {
               </p>
             </div>
             <h1 className="font-bold text-lg ">{title}</h1>
+
             <h2 className="font-medium text-sm">
               {desc.slice(0, 140) + "..."}
             </h2>
+            <p className="font-semibold mt-2 text-sm text-slate-500">
+              Category: {categoryName}
+            </p>
           </div>
         </div>
         <div className="flex justify-end mt-3">
