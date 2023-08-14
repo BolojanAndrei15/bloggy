@@ -85,7 +85,20 @@ function PostPage() {
               <img className="object-cover h-[30rem] w-full" src={data.image} />
             </div>
             <div className="mt-2 flex flex-col space-y-2 mb-2">
-              <h1 className="text-2xl font-bold">{data.title}</h1>
+              <div>
+                <h1 className="text-2xl font-bold">{data.title}</h1>
+                {data.createdAt !== data.updatedAt && (
+                  <p className="text-sm font-semibold text-gray-500">
+                    Last edited:{" "}
+                    {new Date(data.updatedAt).toLocaleString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                )}
+              </div>
               <h2 className="text-md font-semibold text-slate-800">
                 {data.description}
               </h2>
